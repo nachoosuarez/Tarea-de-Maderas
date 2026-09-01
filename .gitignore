@@ -9,3 +9,15 @@ Thumbs.db
 *.zip
 EN384.pdf
 EN14358.pdf
+
+# Auxiliares de LaTeX. El .tex es la fuente; el PDF se regenera compilando
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+INFORME.pdf

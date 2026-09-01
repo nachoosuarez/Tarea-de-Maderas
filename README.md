@@ -83,6 +83,8 @@ figuran. Las tres muestras son tres secciones transversales distintas:
 ## Cómo moverse por el repo
 
 ```
+INFORME.tex        <-- ARCHIVO MADRE. El informe entero, en LaTeX, para Overleaf.
+PLANIFICACION.md   El plan completo con la justificación normativa de cada paso.
 00-datos/          Datos crudos y la letra del trabajo. No se toca.
 01-semana-01_...   Auditoría de los datos. Hecha.
 02-semanas-02-03_  Etapas 1 y 2: propiedades por pieza y correcciones.
@@ -97,6 +99,44 @@ resultados/        Salidas generadas. Se regeneran corriendo los scripts.
 Cada carpeta tiene su propio `README.md` con la tarea concreta de esa semana, el entregable
 y una checklist. La justificación completa de cada paso está en
 [`PLANIFICACION.md`](PLANIFICACION.md).
+
+## El archivo madre: `INFORME.tex`
+
+En la raíz, fuera de las carpetas por semana, está [`INFORME.tex`](INFORME.tex): **el informe
+completo en LaTeX**, en un único archivo autocontenido. Se sube tal cual a Overleaf (New
+Project → Upload Project, o pegarlo en un proyecto en blanco) y compila con **pdfLaTeX** sin
+tocar nada. Verificado localmente con MiKTeX: 10 páginas, sin errores ni warnings.
+
+Sigue la estructura que pide la letra: Resumen · Objetivos · Datos de partida · Análisis de
+datos · Resultados · Conclusiones, más los Anexos A, B y C.
+
+**Cómo se lee el archivo:**
+
+| Marca | Color en el PDF | Qué significa |
+|---|---|---|
+| texto normal | negro | Ya calculado y contrastado. Se puede usar |
+| `\pendiente{...}` | rojo | Falta calcularlo o redactarlo |
+| `\verificar{...}` | naranja | Hay un número puesto pero hay que contrastarlo contra la fuente |
+| `\fuente{...}` | cursiva chica | Norma, apartado y página de donde salió lo de arriba |
+
+**Ninguna marca naranja puede quedar en la versión que se entrega.** Las rojas se van
+completando semana a semana, y son el indicador visual de cuánto falta.
+
+## Política del repo: todo se guarda acá
+
+Nada de resultados sueltos en el chat, en el Escritorio o en un Excel local. Cada cosa que se
+produce entra al repo, en el lugar que le toca:
+
+| Qué se produjo | Dónde va |
+|---|---|
+| Un número, una tabla o una conclusión | `INFORME.tex` (y, si es intermedio, el README de su semana) |
+| Un cálculo | `scripts/`, nunca a mano |
+| La salida de un script | `resultados/`, regenerable |
+| Una fórmula nueva | `06-referencias/README.md`, con apartado y página |
+| Una decisión de criterio o una duda para el docente | El README de la semana correspondiente |
+
+El `INFORME.tex` se actualiza en el mismo commit en que se produce el resultado, no al final.
+Así el estado real del trabajo se lee compilando el archivo madre y contando marcas rojas.
 
 ## Convenciones
 

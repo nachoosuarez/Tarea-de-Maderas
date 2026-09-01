@@ -1,0 +1,632 @@
+% =============================================================================
+%  INFORME MADRE - Trabajo de caracterizacion de Picea
+%  Estructuras de Madera 2026 - FING, UdelaR
+%
+%  Archivo unico y autocontenido: se sube tal cual a Overleaf y compila con
+%  pdfLaTeX. No depende de ningun otro archivo del repositorio.
+%
+%  COMO TRABAJAR ESTE ARCHIVO
+%   - Lo que ya esta calculado y verificado esta escrito con sus numeros.
+%   - Lo que falta esta marcado con \pendiente{...} y sale en rojo en el PDF.
+%   - Lo que hay que contrastar contra la fuente esta marcado con \verificar{...}
+%     y sale en naranja. Ningun \verificar puede quedar en la version que se
+%     entrega.
+%   - Cada formula lleva al margen la norma, el apartado y la pagina de donde
+%     salio, con el comando \fuente{...}.
+% =============================================================================
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-nodecimaldot,es-noquoting,es-tabla]{babel}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}    % permite anclar tablas con [H], para que no floten fuera de su sección
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+
+\sisetup{
+  output-decimal-marker = {,},
+  group-separator       = {\,},
+  group-minimum-digits  = 5,
+  detect-weight         = true
+}
+
+% --- Marcadores de estado -----------------------------------------------------
+\newcommand{\pendiente}[1]{\textcolor{red}{\textbf{[PENDIENTE:} #1\textbf{]}}}
+\newcommand{\verificar}[1]{\textcolor{orange}{\textbf{[VERIFICAR:} #1\textbf{]}}}
+\newcommand{\fuente}[1]{{\small\textit{Fuente: #1}}}
+% Marcador corto para celdas de tabla: el texto largo de \pendiente no entra en
+% el ancho de pagina cuando se repite en cada columna.
+\newcommand{\pdt}{\textcolor{red}{\textbf{---}}}
+
+% --- Notacion recurrente ------------------------------------------------------
+\newcommand{\fm}{f_{m}}
+\newcommand{\Eml}{E_{m,\ell}}
+\newcommand{\Ecero}{E_{0}}
+\newcommand{\uref}{u_{\mathrm{ref}}}
+\newcommand{\lonet}{\ell_{\mathrm{et}}}   % ojo: \let es primitivo de TeX, no usar
+
+\title{\textbf{Caracterización estructural de madera aserrada de Picea}\\[0.3em]
+       \large Determinación de la clase resistente a partir de ensayos de flexión}
+\author{\pendiente{integrantes del grupo}}
+\date{Estructuras de Madera 2026 --- Facultad de Ingeniería, UdelaR \\[0.3em]
+      Entrega: 6 de noviembre de 2026}
+
+\begin{document}
+\maketitle
+
+% =============================================================================
+\section*{Resumen}
+\addcontentsline{toc}{section}{Resumen}
+% -----------------------------------------------------------------------------
+Se caracteriza un lote de madera aserrada de Picea, previamente clasificada de forma
+visual, a partir de los resultados de ensayo de flexión de \num{258} piezas repartidas
+en tres muestras de secciones transversales distintas. Se determinan la resistencia a
+flexión y el módulo de elasticidad local de cada pieza según UNE-EN 408:2010, se
+ajustan los resultados a las condiciones de referencia de UNE-EN 384:2016, se obtienen
+los valores característicos por el procedimiento paramétrico de UNE-EN 14358:2016 y se
+asigna la clase resistente correspondiente según UNE-EN 338:2010.
+
+\medskip
+\noindent Se concluye que al lote le corresponde la clase resistente
+\pendiente{clase C asignada}, gobernada por \pendiente{criterio gobernante}.
+
+\medskip
+\noindent\emph{Nota: el resumen se redacta al final, cuando los resultados estén cerrados.}
+
+\tableofcontents
+\newpage
+
+% =============================================================================
+\section{Objetivos}
+% -----------------------------------------------------------------------------
+Establecer la clase resistente que corresponde a un lote de madera aserrada de
+conífera (Picea) de procedencia y calidad determinadas, a partir de los resultados
+de los ensayos de caracterización realizados sobre una muestra representativa del
+lote y aplicando el procedimiento normativo vigente.
+
+De forma específica:
+
+\begin{enumerate}
+  \item Determinar las propiedades mecánicas de cada pieza ensayada: resistencia a
+        flexión y módulo de elasticidad local.
+  \item Ajustar esos resultados a las condiciones de referencia establecidas por la
+        norma, de modo que las tres muestras sean comparables entre sí.
+  \item Obtener los valores característicos del lote: resistencia característica a
+        flexión, módulo de elasticidad medio y densidad característica.
+  \item Asignar la clase resistente y determinar cuál de los tres criterios la
+        gobierna.
+\end{enumerate}
+
+% =============================================================================
+\section{Datos de partida}
+% -----------------------------------------------------------------------------
+
+\subsection{Descripción del lote y del ensayo}
+
+El lote está constituido por piezas de madera aserrada de Picea sometidas
+previamente a clasificación visual. \textbf{Los datos suministrados corresponden
+únicamente a las piezas que superaron el criterio de clasificación}; las piezas
+rechazadas no figuran en el archivo de resultados.
+
+El ensayo realizado es el de flexión en cuatro puntos según UNE-EN 408:2010, con la
+carga aplicada en los tercios de la luz. La configuración geométrica responde al
+esquema de la figura del ensayo normalizado, con luz entre apoyos $\ell$ y distancia
+$a$ entre cada punto de carga y su apoyo más próximo.
+
+\fuente{S03E02, p.~16}
+
+\medskip
+Para cada pieza se dispone de los siguientes datos:
+
+\begin{table}[htbp]
+\centering
+\caption{Variables suministradas por el laboratorio}
+\begin{tabular}{llp{8.2cm}}
+\toprule
+\textbf{Variable} & \textbf{Unidad} & \textbf{Descripción} \\
+\midrule
+$b$        & \si{\milli\meter}      & Ancho de la sección transversal \\
+$h$        & \si{\milli\meter}      & Canto de la sección transversal \\
+$a$        & \si{\milli\meter}      & Distancia entre punto de carga y apoyo \\
+$\ell$     & \si{\milli\meter}      & Luz entre apoyos \\
+$CH$       & \si{\percent}          & Contenido de humedad de la pieza \\
+$\rho$     & \si{\kilo\gram\per\cubic\meter} & Densidad \\
+$P_{max}$  & \si{\newton}           & Carga total de rotura \\
+$P/f$      & \si{\newton\per\milli\meter} & Pendiente del tramo elástico de la curva carga-flecha \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Composición de la muestra}
+
+Las tres muestras corresponden a tres secciones transversales distintas de la misma
+procedencia y calidad.
+
+\begin{table}[htbp]
+\centering
+\caption{Composición del lote ensayado}
+\label{tab:lote}
+\begin{tabular}{c c S[table-format=2.2] S[table-format=3.2] c S[table-format=4.1] S[table-format=4.1]}
+\toprule
+\textbf{Muestra} & \textbf{$n$} & {$b$ medio} & {$h$ medio} & {$h$ mín--máx} & {$a$} & {$\ell$} \\
+                 &              & {[\si{\milli\meter}]} & {[\si{\milli\meter}]} & {[\si{\milli\meter}]} & {[\si{\milli\meter}]} & {[\si{\milli\meter}]} \\
+\midrule
+1 & 89 & 35.93 & 93.94  & 91,2--96,0    & 603.7  & 1771.4 \\
+2 & 90 & 44.92 & 142.10 & 139,7--145,2  & 931.3  & 2714.6 \\
+3 & 79 & 57.00 & 189.83 & 186,1--193,1  & 1217.1 & 3574.1 \\
+\midrule
+\multicolumn{2}{l}{\textbf{Total}} & \multicolumn{5}{l}{\num{258} piezas} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent UNE-EN 384:2016, apartado 5.1, exige un mínimo de \num{40} probetas por muestra
+para el caso de clasificación visual. Las tres muestras lo superan holgadamente
+(\num{89}, \num{90} y \num{79} piezas), por lo que no corresponde reportar desvío
+alguno respecto del tamaño mínimo de muestreo.
+
+\fuente{UNE-EN 384:2016, \S5.1}
+
+\subsection{Verificación previa de los datos}
+
+Antes de operar sobre los datos se verificó su integridad y la conformidad del
+dispositivo de ensayo. El detalle completo se recoge en el Anexo~\ref{anx:geometria}.
+
+\begin{itemize}
+  \item Las \num{258} filas del archivo se procesan sin errores y no existen piezas
+        duplicadas.
+  \item Las \num{258} piezas cumplen simultáneamente las tolerancias geométricas de
+        UNE-EN 408:2010: $\ell = 18h \pm 3h$ y $a = 6h \pm 1{,}5h$.
+  \item Las relaciones $\ell/h$ medidas son $18{,}86$, $19{,}10$ y $18{,}83$ para las
+        muestras 1, 2 y 3 respectivamente. \textbf{No son iguales a 18}, por lo que el
+        coeficiente $k_\ell$ de UNE-EN 384:2016 no vale la unidad y debe calcularse
+        pieza a pieza (véase \S\ref{sec:correcciones}).
+  \item Los contenidos de humedad están comprendidos entre \SI{9,8}{\percent} y
+        \SI{13,9}{\percent}, dentro del rango de validez
+        $8 \leq u \leq 18$ (en \si{\percent}) que establece UNE-EN 384:2016 para las
+        correcciones de humedad. Ninguna pieza requiere truncarse a
+        $u = \SI{18}{\percent}$.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Rangos medidos por muestra}
+\label{tab:rangos}
+\begin{tabular}{c c c c c c}
+\toprule
+\textbf{Muestra} & \textbf{$CH$ [\si{\percent}]} & \textbf{$CH$ medio} &
+\textbf{$\rho$ [\si{\kilo\gram\per\cubic\meter}]} & \textbf{$P_{max}$ [\si{\newton}]} &
+\textbf{$P/f$ [\si{\newton\per\milli\meter}]} \\
+\midrule
+1 & 10,2--13,6 & 11,97 & 389--519 & \numrange{3299}{10740}  & 208--457 \\
+2 & 10,7--13,9 & 12,07 & 370--489 & \numrange{8710}{19673}  & 284--491 \\
+3 & 9,8--13,5  & 11,96 & 379--523 & \numrange{12773}{46155} & 360--699 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% =============================================================================
+\section{Hipótesis y marco normativo}
+% -----------------------------------------------------------------------------
+
+Se declaran de forma expresa las hipótesis adoptadas, previamente a cualquier
+cálculo.
+
+\subsection{Normas aplicadas}
+
+\begin{table}[htbp]
+\centering
+\caption{Normas aplicadas y alcance de cada una}
+\begin{tabular}{lp{9.5cm}}
+\toprule
+\textbf{Norma} & \textbf{Alcance en este trabajo} \\
+\midrule
+UNE-EN 408:2010   & Método de ensayo y ecuaciones para la determinación de la resistencia a flexión y del módulo de elasticidad. \\
+UNE-EN 384:2016   & Ajuste de los resultados a las condiciones de referencia y combinación de los valores de las submuestras. \\
+UNE-EN 14358:2016 & Cálculo de los valores característicos (percentil del \SI{5}{\percent} y valores medios). \\
+UNE-EN 338:2010   & Asignación de la clase resistente. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Prelación entre normas.} UNE-EN 384:2016, apartado 5.5.1, remite
+expresamente a UNE-EN 14358 para el cálculo de los percentiles. En consecuencia, allí
+donde ambas normas se solapan prevalece UNE-EN 14358:2016. \textbf{No se emplea} el
+procedimiento de la edición anterior UNE-EN 384:2010
+($f_{k} = \bar{f}_{05}\cdot k_{s}\cdot k_{v}$), sustituido por el procedimiento
+paramétrico actualizado.
+
+\subsection{Hipótesis adoptadas}
+
+\begin{itemize}
+  \item \textbf{Tipo de clasificación:} visual, no mecánica. Esta condición determina
+        que resulte de aplicación el apartado 5.5.2.2 de UNE-EN 384:2016, con el factor
+        $k_{n}$ función del número de submuestras.
+  \item \textbf{Condiciones de referencia} (UNE-EN 384:2016, \S5.3): contenido de
+        humedad $\uref = \SI{12}{\percent}$, correspondiente a \SI{20}{\celsius} y
+        \SI{65}{\percent} de humedad relativa; canto de referencia
+        \SI{150}{\milli\meter}; luz de ensayo $18h$ con carga aplicada en los tercios.
+  \item \textbf{Módulo de cortadura:} $G = \Eml/16$, valor impuesto por el enunciado
+        del trabajo entre las alternativas que contempla el método general.
+  \item \textbf{Situación de ensayo:} caracterización de material, no verificación
+        estructural. No intervienen coeficientes parciales de seguridad ni
+        combinaciones de acciones.
+  \item \textbf{Unidades:} se trabaja en \si{\newton}, \si{\milli\meter},
+        \si{\newton\per\square\milli\meter} y \si{\kilo\gram\per\cubic\meter}. La
+        pendiente $P/f$ suministrada está expresada en
+        \si{\newton\per\milli\meter}, según se declara en el propio archivo de datos.
+\end{itemize}
+
+% =============================================================================
+\section{Análisis de datos}
+% -----------------------------------------------------------------------------
+
+\subsection{Tratamiento individual: propiedades de cada pieza}
+
+\subsubsection{Resistencia a flexión}
+
+Para el ensayo de flexión en cuatro puntos con carga aplicada en los tercios, el
+momento máximo es constante en el tramo central y la resistencia a flexión de cada
+pieza resulta:
+
+\begin{equation}
+\fm = \frac{3\,F\,a}{b\,h^{2}}
+\label{eq:fm}
+\end{equation}
+
+\noindent donde $F = P_{max}$ es la carga total de rotura.
+
+\fuente{S03E02, p.~28}
+
+\subsubsection{Módulo de elasticidad local}
+
+El módulo de elasticidad se obtiene por el método general, descontando la
+contribución de la deformación por cortante:
+
+\begin{equation}
+\Eml = \frac{3a\ell^{2} - 4a^{3}}
+            {2\,b\,h^{3}\left[\,2\,\dfrac{w_{2}-w_{1}}{F_{2}-F_{1}}
+             - \dfrac{6a}{5\,G\,b\,h}\,\right]}
+\label{eq:Eml}
+\end{equation}
+
+\fuente{S03E02, p.~26}
+
+\medskip
+\noindent Sobre la aplicación de la ecuación~\eqref{eq:Eml} caben dos precisiones:
+
+\begin{enumerate}
+  \item El dato suministrado $P/f$ es la pendiente $(F_{2}-F_{1})/(w_{2}-w_{1})$, es
+        decir, \textbf{el inverso} del cociente que figura en la ecuación. Verificado
+        el orden de magnitud del resultado, se confirma que la unidad
+        \si{\newton\per\milli\meter} declarada en el archivo es la correcta.
+  \item Al adoptarse $G = \Eml/16$, la ecuación~\eqref{eq:Eml} queda \textbf{implícita}
+        en $\Eml$. Sustituyendo y despejando se obtiene la forma cerrada:
+\end{enumerate}
+
+\begin{equation}
+\Eml = \frac{(P/f)\left(3a\ell^{2} - 4a^{3} + 38{,}4\,a\,h^{2}\right)}{4\,b\,h^{3}}
+\label{eq:Eml_cerrada}
+\end{equation}
+
+\noindent La equivalencia entre \eqref{eq:Eml} y \eqref{eq:Eml_cerrada} se comprobó
+numéricamente resolviendo la ecuación implícita por iteración sobre piezas de las tres
+muestras; la discrepancia resulta inferior a \num{e-5}\,\si{\percent}. El detalle se recoge en el
+Anexo~\ref{anx:geometria}.
+
+\subsection{Corrección a las condiciones de referencia}
+\label{sec:correcciones}
+
+UNE-EN 384:2016, apartado 5.4.1, exige que el ajuste se realice \textbf{probeta a
+probeta}, y no sobre los valores medios de la muestra.
+
+\begin{table}[htbp]
+\centering
+\caption{Correcciones aplicadas según UNE-EN 384:2016}
+\begin{tabular}{p{3.3cm}p{7.2cm}l}
+\toprule
+\textbf{Corrección} & \textbf{Expresión} & \textbf{Apartado} \\
+\midrule
+Humedad, módulo    & $\Ecero = \Ecero(u)\,[1 + 0{,}01\,(u - \uref)]$      & \S5.4.2, (2) \\
+Humedad, densidad  & $\rho = \rho(u)\,[1 - 0{,}005\,(u - \uref)]$          & \S5.4.2, (3) \\
+Canto              & $\fm$ dividida por $k_{h}$                            & \S5.4.3, (4) \\
+Luz de ensayo      & $\fm$ dividida por $k_{\ell}$                         & \S5.4.3, (5)(6) \\
+Módulo local       & $\Ecero = E_{m,\text{local}}(\uref)$                  & \S5.4.4, (8) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent con
+
+\begin{align}
+k_{h}      &= \min\left\{ \left(\frac{150}{h}\right)^{0{,}2} ;\; 1{,}3 \right\}
+\label{eq:kh}\\[0.4em]
+k_{\ell}   &= \left(\frac{48\,h}{\lonet}\right)^{0{,}2}
+\qquad\text{con}\qquad \lonet = \ell + 5\,a_{f}
+\label{eq:kl}
+\end{align}
+
+\medskip
+\noindent\textbf{Particularidades de este lote.} Cuatro puntos merecen justificación
+expresa:
+
+\begin{enumerate}
+  \item \textbf{El coeficiente $k_{h}$ no se aplica a la muestra 3.} El apartado 5.4.3
+        condiciona la corrección a cantos inferiores a \SI{150}{\milli\meter} y
+        densidades no superiores a \SI{700}{\kilo\gram\per\cubic\meter}. La muestra 3
+        presenta un canto medio de \SI{189,83}{\milli\meter}, por lo que en ella
+        $k_{h} = 1$.
+  \item \textbf{El coeficiente $k_{\ell}$ no vale la unidad en ninguna muestra}, dado
+        que las relaciones $\ell/h$ medidas difieren de 18. Se calcula pieza a pieza
+        mediante \eqref{eq:kl}.
+  \item \textbf{No se emplea la expresión (7)} de UNE-EN 384:2016,
+        $\Ecero = 1{,}3\,E_{m,\text{global}} - 2690$, por cuanto corresponde al módulo
+        global. Habiéndose determinado el módulo local, resulta de aplicación la
+        expresión (8), que traslada el valor directamente.
+  \item \textbf{Ajuste de la densidad por el factor 1,05.} El apartado 5.3.4 lo
+        reserva a las probetas \emph{que no se someten a ensayo hasta rotura}, cuya
+        densidad se determina a partir de la masa y el volumen de la pieza completa.
+        En el presente caso las \num{258} piezas fueron ensayadas hasta rotura, por lo
+        que la densidad se habría determinado sobre probetas pequeñas libres de
+        defectos y el ajuste no resultaría de aplicación.
+        \verificar{el archivo de datos no declara el procedimiento de medida de $\rho$;
+        confirmar con el docente. La diferencia es del \SI{4,8}{\percent} y puede
+        alterar la clase resistente resultante}
+\end{enumerate}
+
+\subsection{Tratamiento estadístico}
+
+\subsubsection{Valores por submuestra (UNE-EN 14358:2016)}
+
+Se aplica el procedimiento paramétrico. Para la resistencia a flexión se adopta la
+distribución \textbf{log-normal}:
+
+\begin{equation}
+\bar{y} = \frac{1}{n}\sum_{i=1}^{n}\ln m_{i}
+\qquad
+s_{y} = \max\left\{ \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(\ln m_{i} - \bar{y})^{2}} ;\; 0{,}05 \right\}
+\qquad
+m_{k} = \exp\!\left(\bar{y} - k_{s}(n)\,s_{y}\right)
+\label{eq:lognormal}
+\end{equation}
+
+\noindent Para la densidad se adopta la distribución \textbf{normal}:
+
+\begin{equation}
+\bar{y} = \frac{1}{n}\sum_{i=1}^{n} m_{i}
+\qquad
+s_{y} = \max\left\{ \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(m_{i} - \bar{y})^{2}} ;\; 0{,}05\,\bar{y} \right\}
+\qquad
+m_{k} = \bar{y} - k_{s}(n)\,s_{y}
+\label{eq:normal}
+\end{equation}
+
+\noindent El módulo de elasticidad se caracteriza por su \textbf{valor medio} de
+submuestra, no por un percentil. El factor $k_{s}(n)$, correspondiente al límite de
+confianza inferior del \SI{75}{\percent}, responde a:
+
+\begin{equation}
+k_{s}(n) = \frac{6{,}5n + 6}{3{,}7n - 3}
+\label{eq:ks}
+\end{equation}
+
+\fuente{S03E02, p.~51}
+
+\verificar{contrastar la expresión \eqref{eq:ks} contra la tabla de UNE-EN 14358:2016 y
+emplear la tabla si difiere. Revisar asimismo el factor $k_{tol}$ al que remite
+UNE-EN 384:2016 \S5.5.1}
+
+\subsubsection{Combinación de las submuestras (UNE-EN 384:2016)}
+
+Tratándose de clasificación visual resulta de aplicación el apartado 5.5.2.2. Con
+$n_{s} = 3$ submuestras, la Tabla 1 de la norma da $k_{n} = 0{,}90$ para las
+resistencias y $k_{n} = 0{,}94$ para el módulo de elasticidad y la densidad.
+
+\begin{align}
+f_{k} &= \min\left\{ 1{,}2\,f_{05,i,\min} ;\; \frac{\sum n_{i}\,f_{05,i}}{n} \right\}\cdot k_{n}
+\label{eq:fk}\\[0.4em]
+E_{0,mean} &= \min\left\{ 1{,}1\,\bar{E}_{i,\min} ;\; \frac{\sum n_{i}\,\bar{E}_{i}}{n} \right\}\cdot \frac{k_{n}}{0{,}95}
+\label{eq:E0}\\[0.4em]
+\rho_{k} &= \min\left\{ 1{,}1\,\rho_{05,i,\min} ;\; \frac{\sum n_{i}\,\rho_{05,i}}{n} \right\}\cdot k_{n}
+\label{eq:rok}
+\end{align}
+
+\fuente{UNE-EN 384:2016, \S5.5.2.2, expresiones (11), (12) y (13); Tabla 1}
+
+\medskip
+\noindent El primer término de cada mínimo penaliza que una submuestra resulte
+sensiblemente inferior a las restantes. Se indicará expresamente cuál de los dos
+términos gobierna en cada caso, por cuanto constituye un indicador de la homogeneidad
+del lote clasificado.
+
+% =============================================================================
+\section{Resultados}
+% -----------------------------------------------------------------------------
+
+\subsection{Valores por submuestra}
+
+Valores obtenidos aplicando el procedimiento paramétrico de UNE-EN 14358:2016 sobre
+los datos ya corregidos a las condiciones de referencia.
+
+\begin{table}[H]
+\centering
+\caption{Valores estadísticos por submuestra}
+\label{tab:submuestras}
+\begin{tabular}{c c c c c c}
+\toprule
+\textbf{Muestra} & \textbf{$n$} & \textbf{$f_{05,i}$} & \textbf{$\bar{E}_{i}$} &
+\textbf{$\rho_{05,i}$} & \textbf{$k_{s}(n)$} \\
+ & & [\si{\newton\per\square\milli\meter}] & [\si{\newton\per\square\milli\meter}] &
+ [\si{\kilo\gram\per\cubic\meter}] & \\
+\midrule
+1 & 89 & \pdt & \pdt & \pdt & \pdt \\
+2 & 90 & \pdt & \pdt & \pdt & \pdt \\
+3 & 79 & \pdt & \pdt & \pdt & \pdt \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Valores característicos del lote}
+
+Combinación de las tres submuestras mediante las expresiones (11), (12) y (13) de
+UNE-EN 384:2016.
+
+\begin{table}[H]
+\centering
+\caption{Valores característicos obtenidos}
+\label{tab:caracteristicos}
+\begin{tabular}{lccl}
+\toprule
+\textbf{Magnitud} & \textbf{Símbolo} & \textbf{Valor} & \textbf{Término que gobierna} \\
+\midrule
+Resistencia característica a flexión & $f_{m,k}$    & \pdt & \pdt \\
+Módulo de elasticidad medio          & $E_{0,mean}$ & \pdt & \pdt \\
+Densidad característica              & $\rho_{k}$   & \pdt & \pdt \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Asignación de la clase resistente}
+
+Tratándose de una conífera, la asignación se efectúa dentro de las clases C de
+UNE-EN 338:2010. Los tres valores han de satisfacer \textbf{simultáneamente} los
+requisitos de la clase; se asigna la clase más alta que cumple con los tres.
+
+\begin{table}[H]
+\centering
+\caption{Verificación de los criterios de asignación}
+\label{tab:clase}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Criterio} & \textbf{Valor obtenido} & \textbf{Requisito de la clase} &
+\textbf{Relación} & \textbf{Cumple} \\
+\midrule
+$f_{m,k}$    [\si{\newton\per\square\milli\meter}] & \pdt & \pdt & \pdt & \pdt \\
+$E_{0,mean}$ [\si{\kilo\newton\per\square\milli\meter}] & \pdt & \pdt & \pdt & \pdt \\
+$\rho_{k}$   [\si{\kilo\gram\per\cubic\meter}] & \pdt & \pdt & \pdt & \pdt \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Clase resistente asignada:} \pendiente{clase}.
+
+\noindent\textbf{Criterio gobernante:} \pendiente{criterio}.
+
+% =============================================================================
+\section{Conclusiones}
+% -----------------------------------------------------------------------------
+
+\pendiente{redactar al cierre. Deben cubrirse, como mínimo:}
+
+\begin{itemize}
+  \item La clase resistente asignada y el criterio que la gobierna.
+  \item El margen existente hasta la clase inmediatamente superior, y qué haría falta
+        para alcanzarla.
+  \item La homogeneidad del lote: si en las expresiones \eqref{eq:fk} a \eqref{eq:rok}
+        gobernó el término del mínimo referido a la submuestra más desfavorable, ello
+        indica que la clasificación visual no produjo un lote homogéneo.
+  \item Las limitaciones del estudio y las decisiones adoptadas ante datos no
+        declarados, en particular el tratamiento de la densidad.
+\end{itemize}
+
+% =============================================================================
+\appendix
+\section{Verificación geométrica del ensayo y de los datos}
+\label{anx:geometria}
+% -----------------------------------------------------------------------------
+
+\subsection{Conformidad del dispositivo de ensayo}
+
+\begin{table}[htbp]
+\centering
+\caption{Verificación de tolerancias de UNE-EN 408:2010}
+\begin{tabular}{c c c c c}
+\toprule
+\textbf{Muestra} & \textbf{$\ell/h$} & \textbf{$a/h$} &
+\textbf{Piezas fuera en $\ell$} & \textbf{Piezas fuera en $a$} \\
+\midrule
+1 & 18,86 & 6,43 & 0 & 0 \\
+2 & 19,10 & 6,55 & 0 & 0 \\
+3 & 18,83 & 6,41 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Tolerancias verificadas: $\ell = 18h \pm 3h$ (esto es, entre $15h$ y $21h$) y
+$a = 6h \pm 1{,}5h$ (entre $4{,}5h$ y $7{,}5h$). Las \num{258} piezas cumplen.
+
+\subsection{Verificación de la forma cerrada del módulo local}
+
+Contraste entre la expresión \eqref{eq:Eml_cerrada} y la resolución iterativa de la
+ecuación implícita \eqref{eq:Eml} con $G = \Eml/16$:
+
+\begin{table}[htbp]
+\centering
+\caption{Contraste entre la forma cerrada y la resolución iterativa}
+\begin{tabular}{S[table-format=2.1] S[table-format=3.1] S[table-format=5.1] S[table-format=5.1] c}
+\toprule
+{$b$ [\si{\milli\meter}]} & {$h$ [\si{\milli\meter}]} &
+{Cerrada [\si{\newton\per\square\milli\meter}]} &
+{Iterativa [\si{\newton\per\square\milli\meter}]} & \textbf{Diferencia} \\
+\midrule
+36.0 & 93.4  & 11091.4 & 11091.4 & $<$\,\num{e-5}\,\si{\percent} \\
+44.9 & 142.1 & 14033.3 & 14033.3 & $<$\,\num{e-5}\,\si{\percent} \\
+57.0 & 189.8 & 13186.8 & 13186.8 & $<$\,\num{e-5}\,\si{\percent} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Valores sin corregir: comprobación de órdenes de magnitud}
+
+Los valores que siguen se calcularon únicamente para validar las unidades y descartar
+errores de factor. \textbf{No constituyen resultados}: les falta la totalidad de las
+correcciones de UNE-EN 384:2016.
+
+\begin{table}[htbp]
+\centering
+\caption{Valores sin corregir (comprobación de unidades)}
+\begin{tabular}{c c c c c}
+\toprule
+\textbf{Muestra} & \textbf{$\fm$ mín--máx} & \textbf{$\fm$ medio} &
+\textbf{$\Eml$ mín--máx} & \textbf{$\Eml$ medio} \\
+ & \multicolumn{2}{c}{[\si{\newton\per\square\milli\meter}]} &
+   \multicolumn{2}{c}{[\si{\newton\per\square\milli\meter}]} \\
+\midrule
+1 & 18,5--64,0 & 37,0 & \numrange{8549}{19721}  & \num{13709} \\
+2 & 26,3--60,6 & 39,1 & \numrange{10212}{17286} & \num{13379} \\
+3 & 23,4--84,2 & 39,7 & \numrange{9773}{19202}  & \num{13844} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% -----------------------------------------------------------------------------
+\section{Tabla de resultados pieza a pieza}
+\label{anx:piezas}
+% -----------------------------------------------------------------------------
+
+\pendiente{tabla de \num{258} filas con: identificación, $b$, $h$, $a$, $\ell$, $CH$,
+$\rho$, $P_{max}$, $P/f$, $\fm$ y $\Eml$ sin corregir, $k_{h}$, $k_{\ell}$, y los
+valores corregidos de $\fm$, $\Ecero$ y $\rho$. Se genera desde el script
+\texttt{03\_correcciones\_en384.py} del repositorio}
+
+% -----------------------------------------------------------------------------
+\section{Estadística por submuestra}
+\label{anx:estadistica}
+% -----------------------------------------------------------------------------
+
+\pendiente{para cada submuestra y cada variable: $n$, media, desviación típica,
+coeficiente de variación, y el percentil o valor medio según corresponda. Se genera
+desde el script \texttt{04\_valores\_caracteristicos.py} del repositorio}
+
+\end{document}
