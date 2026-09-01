@@ -75,7 +75,11 @@ figuran. Las tres muestras son tres secciones transversales distintas:
       el mínimo de 40 probetas, toda la geometría de ensayo cae dentro de tolerancia y todas
       las humedades están en el rango de validez de la norma. Ver
       [`01-semana-01_auditoria/`](01-semana-01_auditoria/).
-- [ ] **Semanas 2-3** — Propiedades por pieza y corrección a condiciones de referencia.
+- [x] **Semanas 2-3** — Propiedades por pieza y corrección a condiciones de referencia. Las
+      258 piezas tienen su `f_m` y su `E_m,local` (EN 408) y sus valores llevados a condiciones
+      de referencia pieza a pieza (EN 384 §5.4). Manda `k_h` en la muestra 1, que baja un
+      8,6 % y pasa a ser la submuestra más débil. Ver
+      [`02-semanas-02-03_propiedades-y-correcciones/`](02-semanas-02-03_propiedades-y-correcciones/).
 - [ ] **Semana 4** — Valores característicos.
 - [ ] **Semana 5** — Clase resistente y borrador del informe.
 - [ ] **Semanas 6-8** — Redacción, anexos y revisión cruzada.
@@ -105,7 +109,7 @@ y una checklist. La justificación completa de cada paso está en
 En la raíz, fuera de las carpetas por semana, está [`INFORME.tex`](INFORME.tex): **el informe
 completo en LaTeX**, en un único archivo autocontenido. Se sube tal cual a Overleaf (New
 Project → Upload Project, o pegarlo en un proyecto en blanco) y compila con **pdfLaTeX** sin
-tocar nada. Verificado localmente con MiKTeX: 10 páginas, sin errores ni warnings.
+tocar nada. Verificado localmente con MiKTeX: 21 páginas, sin errores ni warnings.
 
 Sigue la estructura que pide la letra: Resumen · Objetivos · Datos de partida · Análisis de
 datos · Resultados · Conclusiones, más los Anexos A, B y C.
@@ -137,6 +141,15 @@ produce entra al repo, en el lugar que le toca:
 
 El `INFORME.tex` se actualiza en el mismo commit en que se produce el resultado, no al final.
 Así el estado real del trabajo se lee compilando el archivo madre y contando marcas rojas.
+
+Para que esa política sea cumplible y no un acto de voluntad, las tablas del informe **no se
+tipean**: el `.tex` tiene bloques delimitados por `% <<<AUTO:nombre>>> … % <<<END:nombre>>>` que
+reescribe `scripts/90_tablas_informe.py` a partir de los CSV de `resultados/`. La redacción a
+mano vive fuera de esos bloques y nunca se pisa. Secuencia después de tocar un cálculo:
+
+```bash
+python scripts/03_correcciones_en384.py && python scripts/90_tablas_informe.py
+```
 
 ## Convenciones
 
