@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+~$*
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Normas AENOR: material licenciado, no se sube
+*.zip
+EN384.pdf
+EN14358.pdf
