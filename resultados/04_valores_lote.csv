@@ -1,0 +1,5 @@
+﻿magnitud;simbolo;ponderada;acotado;gobierna;kn;divisor;valor;valor_ks_tabla
+[-];[-];[unidad de la magnitud];[unidad de la magnitud];[-];[-];[-];[unidad de la magnitud];[unidad de la magnitud]
+Resistencia característica a flexión;fmk;25,4175;27,5626;media ponderada;0,9;1;22,8757;22,796
+Módulo de elasticidad medio;E0mean;13635,7;14726,6;media ponderada;0,94;0,95;13492,1;13492,1
+Densidad característica;rok;388,686;409,565;media ponderada;0,94;1;365,365;364,919

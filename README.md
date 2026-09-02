@@ -80,7 +80,12 @@ figuran. Las tres muestras son tres secciones transversales distintas:
       de referencia pieza a pieza (EN 384 §5.4). Manda `k_h` en la muestra 1, que baja un
       8,6 % y pasa a ser la submuestra más débil. Ver
       [`02-semanas-02-03_propiedades-y-correcciones/`](02-semanas-02-03_propiedades-y-correcciones/).
-- [ ] **Semana 4** — Valores característicos.
+- [x] **Semana 4** — Valores característicos. Percentiles por submuestra con el método
+      paramétrico de EN 14358 (log-normal para resistencia, normal para densidad, media
+      aritmética para el módulo) y combinación de las 3 submuestras por EN 384 §5.5.2.2:
+      **`f_m,k` = 22,88 N/mm²**, **`E_0,mean`= 13 492 N/mm²**, **`ρ_k` = 365,4 kg/m³**. En las
+      tres gobierna la media ponderada, o sea que el lote es homogéneo. Ver
+      [`03-semana-04_valores-caracteristicos/`](03-semana-04_valores-caracteristicos/).
 - [ ] **Semana 5** — Clase resistente y borrador del informe.
 - [ ] **Semanas 6-8** — Redacción, anexos y revisión cruzada.
 
@@ -109,7 +114,12 @@ y una checklist. La justificación completa de cada paso está en
 En la raíz, fuera de las carpetas por semana, está [`INFORME.tex`](INFORME.tex): **el informe
 completo en LaTeX**, en un único archivo autocontenido. Se sube tal cual a Overleaf (New
 Project → Upload Project, o pegarlo en un proyecto en blanco) y compila con **pdfLaTeX** sin
-tocar nada. Verificado localmente con MiKTeX: 21 páginas, sin errores ni warnings.
+tocar nada. Compilado localmente con MiKTeX: **23 páginas, sin errores**.
+
+> Sí tira 9 avisos `Infinite glue shrinkage found in box being split`, en las páginas de los
+> anexos. Los produce `longtable` al partir una tabla larga entre páginas y son
+> **preexistentes** — ya estaban antes de la semana 4 —; la salida sale bien igual. Lo aclaro
+> porque este README afirmaba «sin errores ni warnings», que era falso.
 
 Sigue la estructura que pide la letra: Resumen · Objetivos · Datos de partida · Análisis de
 datos · Resultados · Conclusiones, más los Anexos A, B y C.
@@ -148,7 +158,7 @@ reescribe `scripts/90_tablas_informe.py` a partir de los CSV de `resultados/`. L
 mano vive fuera de esos bloques y nunca se pisa. Secuencia después de tocar un cálculo:
 
 ```bash
-python scripts/03_correcciones_en384.py && python scripts/90_tablas_informe.py
+python scripts/03_correcciones_en384.py && python scripts/04_valores_caracteristicos.py && python scripts/90_tablas_informe.py
 ```
 
 ## Convenciones

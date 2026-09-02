@@ -46,11 +46,18 @@ pudo leer de la fuente va marcado **VERIFICAR**.
 
 - **`k_s(n)`** — la expresión `(6,5n + 6)/(3,7n − 3)` **no es solo de la diapositiva**: es la
   fórmula (10) de la propia EN 14358:2016 §3.2.2 f), que la norma admite expresamente como
-  alternativa a su Tabla 1. Da valores levemente mayores que la tabla, o sea del lado de la
-  seguridad (n = 100: fórmula 1,788 vs tabla 1,76). Valores tabulados: n=3 → 3,15; 5 → 2,46;
-  10 → 2,10; 15 → 1,99; 20 → 1,93; 30 → 1,87; 50 → 1,81; 100 → 1,76; 500 → 1,69; ∞ → 1,64.
+  alternativa a su Tabla 1. Valores tabulados: n=3 → 3,15; 5 → 2,46; 10 → 2,10; 15 → 1,99;
+  20 → 1,93; 30 → 1,87; 50 → 1,81; 100 → 1,76; 500 → 1,69; ∞ → 1,64.
   Para n no tabulado la norma manda **tomar el valor inmediatamente mayor**.
   Con nuestros n: 89 → 1,7913 · 90 → 1,7909 · 79 → 1,7957.
+  **Corrección de lo que decía antes esta ficha:** la fórmula (10) **no** es uniformemente
+  del lado de la seguridad frente a la Tabla 1. Contrastada punto a punto da *menos* que la
+  tabla en los n chicos (3 → 3,148 vs 3,15 · 10 → 2,088 vs 2,10 · 20 → 1,9155 vs 1,93) y
+  *más* en los grandes (50 → 1,8187 vs 1,81 · 100 → 1,7875 vs 1,76). El cruce está entre
+  n = 30 y n = 50. Para nuestras submuestras la fórmula queda por debajo de la Tabla 1
+  (≈1,79 vs 1,81), o sea levemente del lado inseguro; el efecto está cuantificado en el
+  Anexo C.2 del informe y es −0,35 % en `f_m,k` y −0,12 % en `ro_k`, sin incidencia en la
+  clase.
 - **`k_tol`** — **no aplica a este trabajo.** EN 384 §5.5.1 lo menciona solo para la
   evaluación **no paramétrica** de los ensayos iniciales de sistemas de clasificación **por
   máquina** (donde manda tomarlo igual a 1). La ruta no paramétrica es EN 14358 §3.2.3, y acá
@@ -63,6 +70,21 @@ pudo leer de la fuente va marcado **VERIFICAR**.
 - **`a_f`** — EN 384 §5.4.3 lo define como la separación entre los dos puntos de aplicación de
   la carga, **no** la distancia apoyo-carga que trae el archivo en la columna `a`. Ver la
   trampa correspondiente más abajo.
+- **Fórmulas (11), (12) y (13)** — leídas de EN 384:2016 §5.5.2.2, p.13-14, y **contrastadas
+  contra la imagen de la página** porque el texto extraído engaña (ver trampas). La forma
+  correcta es:
+
+  ```
+  (11)  f_k      = mín{ 1,2·f_05,mín  ; SUMA(n_i·f_05,i)/n  } · k_n
+  (12)  E_0,mean = mín{ 1,1·E_mín     ; SUMA(n_i·E_i)/n     } · k_n / 0,95
+  (13)  ro_k     = mín{ 1,1·ro_05,mín ; SUMA(n_i·ro_05,i)/n } · k_n
+  ```
+
+  `k_n` multiplica **el mínimo entero**, no solo la media ponderada.
+- **Tabla 1 de EN 384** (`k_n` por número de submuestras `ns`): módulo y densidad
+  0,88 / 0,91 / 0,94 / 0,97 / 1,00 para ns = 1/2/3/4/5+; resistencias paralelas a la fibra
+  0,70 / 0,80 / 0,90 / 0,95 / 1,00. Con **ns = 3**: `k_n = 0,90` en resistencia y `0,94` en
+  módulo y densidad.
 
 ## Valores que quedan pendientes de verificar
 
@@ -76,6 +98,17 @@ pudo leer de la fuente va marcado **VERIFICAR**.
   se extrajo como `l_et = l − 5·a_f`, que da longitudes negativas. Contra la imagen de la
   página se confirmó que es **suma**. Ante un signo o un símbolo raro en una desigualdad,
   mirar la página renderizada, no el texto extraído.
+- **El OCR movió el `k_n` de lugar en las fórmulas (11)(12)(13).** El texto extraído las
+  maqueta de modo que `k_n` parece multiplicar solo la media ponderada, dentro del `mín{}`.
+  Renderizando las páginas 13 y 14 a 220 dpi se ve que el `· k_n` está **fuera** del
+  paréntesis. La (12) además aparece compuesta como `k_{n/0,95}`, con el 0,95 caído a
+  subíndice: la lectura correcta es `· k_n` y después `/ 0,95`, coherente con la fórmula (10)
+  del apartado anterior.
+- **«Tomar el valor inmediatamente mayor» se refiere a `k_s`, no a `n`.** Como `k_s` decrece
+  al crecer `n`, para n = 89 corresponde la entrada **n = 50 → 1,81**, no la de n = 100 →
+  1,76. Ir a la entrada de n más cercano por arriba da el valor menos conservador, que es
+  justo lo contrario de lo que pide la norma. Es un error fácil de escribir en el código y
+  que no rompe nada.
 - **La diapositiva p.44 corresponde a EN 384:2010**, la ruta vieja con `k_s` y `k_v`. No se
   usa en este trabajo.
 - **`a_f` no es la `a` del archivo de datos.** Es el error silencioso más caro de la etapa 2:

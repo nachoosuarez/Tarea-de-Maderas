@@ -58,10 +58,67 @@ una muestra floja.
 
 ## Checklist
 
-- [ ] Leer la EN 14358:2016 del PDF y confirmar `k_s(n)` y `k_tol` contra la tabla
-- [ ] `f_05,i` de cada muestra por el método log-normal
-- [ ] `ro_05,i` de cada muestra por el método normal
-- [ ] `E_i` medio de cada muestra
-- [ ] Tabla estadística por submuestra: n, media, desvío, CV, percentil (Anexo B)
-- [ ] Aplicar (11), (12) y (13) con los `k_n` correctos
-- [ ] Anotar qué término del mínimo gobernó en cada fórmula
+- [x] Leer la EN 14358:2016 del PDF y confirmar `k_s(n)` y `k_tol` contra la tabla
+- [x] `f_05,i` de cada muestra por el método log-normal
+- [x] `ro_05,i` de cada muestra por el método normal
+- [x] `E_i` medio de cada muestra
+- [x] Tabla estadística por submuestra: n, media, desvío, CV, percentil (§5.1 y Anexo C)
+- [x] Aplicar (11), (12) y (13) con los `k_n` correctos
+- [x] Anotar qué término del mínimo gobernó en cada fórmula
+
+---
+
+# Resultado
+
+Lo produce `scripts/04_valores_caracteristicos.py`, que lee
+`resultados/03_valores_corregidos.csv` y escribe `04_por_submuestra.csv`,
+`04_valores_lote.csv` y `04_resumen_etapa3.md`. Después hay que correr el `90` para que el
+informe se entere:
+
+```bash
+python scripts/04_valores_caracteristicos.py && python scripts/90_tablas_informe.py
+```
+
+## Por submuestra
+
+| Muestra | n | `k_s(n)` | `f_05` [N/mm²] | `ro_05` [kg/m³] | `E` medio [N/mm²] |
+|---|---|---|---|---|---|
+| 1 | 89 | 1,7913 | 22,97 | 401,6 | 13 706 |
+| 2 | 90 | 1,7909 | 28,29 | 372,3 | 13 388 |
+| 3 | 79 | 1,7957 | 24,90 | 392,8 | 13 839 |
+
+## Del lote
+
+| Magnitud | Media ponderada | Tope sobre la peor | Gobierna | `k_n` | **Valor** |
+|---|---|---|---|---|---|
+| `f_m,k` [N/mm²] | 25,42 | 27,56 | media ponderada | 0,90 | **22,88** |
+| `E_0,mean` [N/mm²] | 13 636 | 14 727 | media ponderada | 0,94 | **13 492** |
+| `ro_k` [kg/m³] | 388,7 | 409,6 | media ponderada | 0,94 | **365,4** |
+
+En las tres **gobierna la media ponderada**, no el término acotado por la submuestra más
+floja: el lote es razonablemente homogéneo pese a las tres escuadrías.
+
+## Decisiones que se tomaron y por qué
+
+- **Distribución de la resistencia: log-normal.** Es la que impone §3.2.2 c) salvo prueba en
+  contrario. Se contrastó igual con el estadístico `D` de Kolmogorov-Smirnov y la log-normal
+  ajusta mejor en las tres submuestras (0,052 / 0,038 / 0,085 contra 0,086 / 0,064 / 0,130),
+  así que no hay motivo para apartarse. Vale saber que la normal habría dado bastante menos
+  (21,50 / 26,94 / 20,94 contra 22,97 / 28,29 / 24,90).
+- **`k_s(n)` por la fórmula (10) y no por la Tabla 1.** Los n no están tabulados. La
+  diferencia se calculó: con el 1,81 de tabla, `f_m,k` baja a 22,80 (−0,35 %) y `ro_k` a
+  364,9 (−0,12 %). No cambia nada.
+- **El piso de CoV del 0,05 no se activó** en ninguna submuestra ni en ninguna variable.
+
+## Lo que esto anticipa de la semana 5
+
+`f_m,k = 22,88 N/mm²` no llega a los 24 que pide la C24, mientras que `E_0,mean` y `ro_k`
+quedan muy por encima de lo que exigiría cualquier clase de ese entorno. O sea que
+**gobierna la resistencia**, no la rigidez. **VERIFICAR** contra la tabla de EN 338:2010,
+que todavía no se leyó — es la tarea de la semana que viene.
+
+## Duda abierta para el docente
+
+Sigue sin resolverse **cómo se midió la densidad**. Si fue sobre pieza completa corresponde
+dividir por 1,05 (EN 384 §5.3.4) y `ro_k` bajaría a ≈348 kg/m³. Con el margen que hay hoy
+no parece que cambie la clase, pero hay que preguntarlo igual.

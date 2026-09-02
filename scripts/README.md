@@ -13,7 +13,7 @@ hace falta exportar a Excel, se agrega `openpyxl`.
 | `01_verif_despeje_modulo_local.py` | Contrasta el despeje cerrado de `E_m,l` contra la resolución iterativa de la ecuación implícita | hecho |
 | `02_propiedades_por_pieza.py` | Etapa 1: `f_m` y `E_m,l` de las 258 piezas | hecho |
 | `03_correcciones_en384.py` | Etapa 2: humedad, `k_h`, `k_l`, paso a `E0` | hecho |
-| `04_valores_caracteristicos.py` | Etapa 3: EN 14358 por submuestra y combinación EN 384 | pendiente |
+| `04_valores_caracteristicos.py` | Etapa 3: EN 14358 por submuestra (log-normal / normal, `k_s(n)`) y combinación EN 384 §5.5.2.2 | hecho |
 | `05_clase_resistente.py` | Etapa 4: verificación de los tres criterios contra las clases C | pendiente |
 | `90_tablas_informe.py` | Vuelca los resultados a los bloques `% <<<AUTO:...>>>` del `INFORME.tex` | hecho |
 
@@ -28,7 +28,7 @@ python scripts/00_auditoria_datos.py
 El orden importa: cada script lee el CSV que dejó el anterior. Cadena completa hasta hoy:
 
 ```bash
-python scripts/02_propiedades_por_pieza.py && python scripts/03_correcciones_en384.py && python scripts/90_tablas_informe.py
+python scripts/02_propiedades_por_pieza.py && python scripts/03_correcciones_en384.py && python scripts/04_valores_caracteristicos.py && python scripts/90_tablas_informe.py
 ```
 
 `90_tablas_informe.py` va **siempre al final**: es el que sincroniza el archivo madre con lo

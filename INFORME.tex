@@ -272,6 +272,16 @@ paramétrico actualizado.
         \si{\newton\per\milli\meter}, según se declara en el propio archivo de datos.
 \end{itemize}
 
+\subsection{Convención de numeración de las expresiones}
+
+Las expresiones que reproducen literalmente una fórmula normativa se numeran con el
+número que la propia norma les asigna, precedido de su identificador: así, la expresión
+\textbf{(384-11)} es la fórmula (11) de UNE-EN 384:2016 y la \textbf{(14358-10)} es la
+fórmula (10) de UNE-EN 14358:2016. Las restantes, propias del presente informe o
+deducidas de la geometría del dispositivo de ensayo, llevan numeración correlativa
+simple. Se evita de este modo la ambigüedad que introduciría una numeración única, dado
+que las dos normas empleadas numeran ambas sus fórmulas desde la unidad.
+
 % =============================================================================
 \section{Análisis de datos}
 % -----------------------------------------------------------------------------
@@ -361,10 +371,10 @@ operan únicamente los factores geométricos $k_{h}$ y $k_{\ell}$ del apartado 5
 
 \begin{align}
 k_{h}      &= \min\left\{ \left(\frac{150}{h}\right)^{0{,}2} ;\; 1{,}3 \right\}
-\label{eq:kh}\\[0.4em]
+\tag{384-4}\label{eq:kh}\\[0.4em]
 k_{\ell}   &= \left(\frac{48\,h}{\lonet}\right)^{0{,}2}
 \qquad\text{con}\qquad \lonet = \ell + 5\,a_{f}
-\label{eq:kl}
+\tag{384-5 y 384-6}\label{eq:kl}
 \end{align}
 
 \medskip
@@ -542,7 +552,7 @@ distribución \textbf{log-normal}:
 s_{y} = \max\left\{ \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(\ln m_{i} - \bar{y})^{2}} ;\; 0{,}05 \right\}
 \qquad
 m_{k} = \exp\!\left(\bar{y} - k_{s}(n)\,s_{y}\right)
-\label{eq:lognormal}
+\tag{14358-1, 14358-3 y 14358-5}\label{eq:lognormal}
 \end{equation}
 
 \noindent Para la densidad se adopta la distribución \textbf{normal}:
@@ -553,7 +563,7 @@ m_{k} = \exp\!\left(\bar{y} - k_{s}(n)\,s_{y}\right)
 s_{y} = \max\left\{ \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(m_{i} - \bar{y})^{2}} ;\; 0{,}05\,\bar{y} \right\}
 \qquad
 m_{k} = \bar{y} - k_{s}(n)\,s_{y}
-\label{eq:normal}
+\tag{14358-2, 14358-4 y 14358-6}\label{eq:normal}
 \end{equation}
 
 \noindent El módulo de elasticidad se caracteriza por su \textbf{valor medio} de
@@ -568,16 +578,23 @@ y admite expresamente evaluarlo mediante la expresión simplificada:
 
 \begin{equation}
 k_{s}(n) = \frac{6{,}5n + 6}{3{,}7n - 3}
-\label{eq:ks}
+\tag{14358-10}\label{eq:ks}
 \end{equation}
 
 \fuente{UNE-EN 14358:2016, \S3.2.2 f), expresión (10) y Tabla 1}
 
 \medskip
 \noindent Se adopta la expresión \eqref{eq:ks} por ser la propia de la norma para
-tamaños de muestra no tabulados y por resultar ligeramente del lado de la seguridad
-frente a la Tabla 1 (para $n = 100$ arroja \num{1,788} frente al \num{1,76} tabulado).
-Se consigna en cada caso el valor de la tabla a efectos de contraste.
+tamaños de muestra no tabulados. Conviene precisar que \textbf{no} resulta
+uniformemente conservadora frente a la Tabla 1: arroja valores algo inferiores a los
+tabulados para tamaños pequeños ($n = 20$: \num{1,916} frente a \num{1,93}) y algo
+superiores para tamaños grandes ($n = 100$: \num{1,788} frente a \num{1,76}). Para los
+tamaños del presente lote la Tabla 1 no tabula $n = 79$, $89$ ni $90$; su regla de
+tomar el valor de $k_{s}$ inmediatamente mayor conduce en los tres casos a la entrada
+$n = 50$, esto es $k_{s} = \num{1,81}$, frente al $\approx \num{1,79}$ de la expresión
+\eqref{eq:ks}. La diferencia se cuantifica en el anexo~\ref{anx:estadistica} y resulta
+inferior al \SI{0,4}{\percent} sobre los valores característicos, sin incidencia sobre
+la clase asignada.
 
 \medskip
 \noindent El factor $k_{tol}$ al que remite UNE-EN 384:2016 \S5.5.1
@@ -594,11 +611,11 @@ resistencias y $k_{n} = 0{,}94$ para el módulo de elasticidad y la densidad.
 
 \begin{align}
 f_{k} &= \min\left\{ 1{,}2\,f_{05,i,\min} ;\; \frac{\sum n_{i}\,f_{05,i}}{n} \right\}\cdot k_{n}
-\label{eq:fk}\\[0.4em]
+\tag{384-11}\label{eq:fk}\\[0.4em]
 E_{0,mean} &= \min\left\{ 1{,}1\,\bar{E}_{i,\min} ;\; \frac{\sum n_{i}\,\bar{E}_{i}}{n} \right\}\cdot \frac{k_{n}}{0{,}95}
-\label{eq:E0}\\[0.4em]
+\tag{384-12}\label{eq:E0}\\[0.4em]
 \rho_{k} &= \min\left\{ 1{,}1\,\rho_{05,i,\min} ;\; \frac{\sum n_{i}\,\rho_{05,i}}{n} \right\}\cdot k_{n}
-\label{eq:rok}
+\tag{384-13}\label{eq:rok}
 \end{align}
 
 \fuente{UNE-EN 384:2016, \S5.5.2.2, expresiones (11), (12) y (13); Tabla 1}
@@ -619,43 +636,65 @@ del lote clasificado.
 Valores obtenidos aplicando el procedimiento paramétrico de UNE-EN 14358:2016 sobre
 los datos ya corregidos a las condiciones de referencia.
 
+% <<<AUTO:submuestras>>>
 \begin{table}[H]
 \centering
-\caption{Valores estadísticos por submuestra}
-\label{tab:submuestras}
-\begin{tabular}{c c c c c c}
+\caption{Valores estadísticos por submuestra (UNE-EN 14358:2016). $f_{05}$ por ajuste log-normal, $\rho_{05}$ por ajuste normal y $\bar{E}$ como media aritmética (\S3.3 d)}
+\begin{tabular}{c c r r r r}
 \toprule
-\textbf{Muestra} & \textbf{$n$} & \textbf{$f_{05,i}$} & \textbf{$\bar{E}_{i}$} &
-\textbf{$\rho_{05,i}$} & \textbf{$k_{s}(n)$} \\
- & & [\si{\newton\per\square\milli\meter}] & [\si{\newton\per\square\milli\meter}] &
- [\si{\kilo\gram\per\cubic\meter}] & \\
+\textbf{Muestra} & \textbf{$n$} & \textbf{$f_{05,i}$} & \textbf{$\bar{E}_{i}$} & \textbf{$\rho_{05,i}$} & \textbf{$k_{s}(n)$} \\
+ & & [\si{\newton\per\square\milli\meter}] & [\si{\newton\per\square\milli\meter}] & [\si{\kilo\gram\per\cubic\meter}] & [--] \\
 \midrule
-1 & 89 & \pdt & \pdt & \pdt & \pdt \\
-2 & 90 & \pdt & \pdt & \pdt & \pdt \\
-3 & 79 & \pdt & \pdt & \pdt & \pdt \\
+1 & 89 & 22,97 & 13706 & 401,6 & 1,7913 \\
+2 & 90 & 28,29 & 13388 & 372,3 & 1,7909 \\
+3 & 79 & 24,90 & 13839 & 392,8 & 1,7957 \\
 \bottomrule
 \end{tabular}
 \end{table}
+% <<<END:submuestras>>>
+
+\noindent La submuestra~1 resulta la más desfavorable en resistencia. Su canto medio
+(\SI{94}{\milli\meter}) es el que más se aparta del de referencia, de manera que la
+corrección por canto $k_{h}$ le rebaja la resistencia un \SI{8,6}{\percent}, en tanto
+que a la submuestra~3 no le resulta de aplicación. Es, en consecuencia, la que
+interviene en el primer término del mínimo de la expresión \eqref{eq:fk}.
+
+\medskip
+\noindent En cuanto a la distribución adoptada para la resistencia, el apartado
+3.2.2 c) de UNE-EN 14358:2016 impone la log-normal salvo que el análisis estadístico
+demuestre que la normal resulta más adecuada. Contrastadas ambas mediante el
+estadístico $D$ de Kolmogorov-Smirnov, la log-normal ajusta mejor en las tres
+submuestras (véase el anexo~\ref{anx:estadistica}), de modo que se mantiene la
+distribución que la norma prescribe por defecto. Para la densidad la norma no admite
+alternativa: ha de estimarse como normal.
 
 \subsection{Valores característicos del lote}
 
 Combinación de las tres submuestras mediante las expresiones (11), (12) y (13) de
 UNE-EN 384:2016.
 
+% <<<AUTO:caracteristicos>>>
 \begin{table}[H]
 \centering
-\caption{Valores característicos obtenidos}
-\label{tab:caracteristicos}
-\begin{tabular}{lccl}
+\caption{Valores característicos del lote (UNE-EN 384:2016, expresiones (11), (12) y (13)). El término «tope» es $1{,}2\,f_{05,\min}$ para la resistencia y $1{,}1\,X_{\min}$ para módulo y densidad; el módulo lleva además el divisor $0{,}95$ de la expresión (12)}
+\begin{tabular}{l c r r c r l}
 \toprule
-\textbf{Magnitud} & \textbf{Símbolo} & \textbf{Valor} & \textbf{Término que gobierna} \\
+\textbf{Magnitud} & \textbf{Unidad} & \textbf{Media pond.} & \textbf{Tope} & \textbf{$k_{n}$} & \textbf{Valor} & \textbf{Gobierna} \\
 \midrule
-Resistencia característica a flexión & $f_{m,k}$    & \pdt & \pdt \\
-Módulo de elasticidad medio          & $E_{0,mean}$ & \pdt & \pdt \\
-Densidad característica              & $\rho_{k}$   & \pdt & \pdt \\
+$f_{m,k}$ & [\si{\newton\per\square\milli\meter}] & 25,42 & 27,56 & 0,90 & \textbf{22,88} & media ponderada \\
+$E_{0,mean}$ & [\si{\newton\per\square\milli\meter}] & 13636 & 14727 & 0,94 & \textbf{13492} & media ponderada \\
+$\rho_{k}$ & [\si{\kilo\gram\per\cubic\meter}] & 388,7 & 409,6 & 0,94 & \textbf{365,4} & media ponderada \\
 \bottomrule
 \end{tabular}
 \end{table}
+% <<<END:caracteristicos>>>
+
+\noindent En las tres expresiones gobierna la \textbf{media ponderada}, y no el término
+acotado por la submuestra más desfavorable. Ello indica que la dispersión entre las tres
+submuestras no es tal que ninguna de ellas arrastre al conjunto: la clasificación visual
+produjo un lote razonablemente homogéneo, pese a tratarse de tres escuadrías distintas.
+De haber gobernado el otro término, el lote habría quedado condicionado por su fracción
+más débil.
 
 \subsection{Asignación de la clase resistente}
 
@@ -1407,9 +1446,68 @@ UNE-EN 14358:2016, cuyo resultado se recoge en el apartado~\ref{sec:resultados_s
 
 \subsection{Parámetros del ajuste estadístico}
 
-\pendiente{para cada submuestra: $\bar{y}$ y $s_{y}$ de la distribución adoptada,
-$k_{s}(n)$ empleado y su contraste con la Tabla 1 de UNE-EN 14358:2016, y el percentil
-del \SI{5}{\percent} resultante. Se genera desde el script
-\texttt{04\_valores\_caracteristicos.py} del repositorio}
+Parámetros con los que se obtuvieron los valores del apartado~\ref{sec:resultados_sub}.
+Para la resistencia, $\bar{y}$ y $s_{y}$ están expresados en logaritmos naturales, por
+ser los de la distribución log-normal; para la densidad, en las unidades de la variable.
+La columna «piso» indica si actuó la limitación de las expresiones (3) y (4), que impide
+adoptar un coeficiente de variación de la muestra inferior a \num{0,05}.
+
+% <<<AUTO:anexoC2>>>
+\begin{table}[H]
+\centering
+\caption{Resistencia a flexión: parámetros del ajuste log-normal. $\bar{y}$ y $s_{y}$ en logaritmos naturales; $m_{k} = f_{05}$ en \si{\newton\per\square\milli\meter}}
+\begin{tabular}{c c r r c r r r}
+\toprule
+\textbf{Muestra} & \textbf{$n$} & \textbf{$\bar{y}$} & \textbf{$s_{y}$} & \textbf{piso} & \textbf{$k_{s}$ (14358-10)} & \textbf{$k_{s}$ Tabla 1} & \textbf{$m_{k}$} \\
+\midrule
+1 & 89 & 3,4995 & 0,2040 & no & 1,7913 & 1,81 & 22,97 \\
+2 & 90 & 3,6461 & 0,1695 & no & 1,7909 & 1,81 & 28,29 \\
+3 & 79 & 3,6539 & 0,2445 & no & 1,7957 & 1,81 & 24,90 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Densidad: parámetros del ajuste normal. $\bar{y}$, $s_{y}$ y $m_{k} = \rho_{05}$ en \si{\kilo\gram\per\cubic\meter}}
+\begin{tabular}{c c r r c r r r}
+\toprule
+\textbf{Muestra} & \textbf{$n$} & \textbf{$\bar{y}$} & \textbf{$s_{y}$} & \textbf{piso} & \textbf{$k_{s}$ (14358-10)} & \textbf{$k_{s}$ Tabla 1} & \textbf{$m_{k}$} \\
+\midrule
+1 & 89 & 450,0 & 27,0 & no & 1,7913 & 1,81 & 401,6 \\
+2 & 90 & 417,3 & 25,1 & no & 1,7909 & 1,81 & 372,3 \\
+3 & 79 & 447,3 & 30,4 & no & 1,7957 & 1,81 & 392,8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Contraste de la distribución adoptada para la resistencia. Estadístico $D$ de Kolmogorov-Smirnov frente a la distribución ajustada; un valor menor indica mejor ajuste}
+\begin{tabular}{c r r c r r}
+\toprule
+\textbf{Muestra} & \textbf{$D$ log-normal} & \textbf{$D$ normal} & \textbf{Mejor ajuste} & \textbf{$f_{05}$ log-normal} & \textbf{$f_{05}$ normal} \\
+ & \multicolumn{2}{c}{[--]} & & \multicolumn{2}{c}{[\si{\newton\per\square\milli\meter}]} \\
+\midrule
+1 & 0,0520 & 0,0859 & log-normal & 22,97 & 21,50 \\
+2 & 0,0382 & 0,0643 & log-normal & 28,29 & 26,94 \\
+3 & 0,0848 & 0,1300 & log-normal & 24,90 & 20,94 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Sensibilidad de los valores característicos al $k_{s}(n)$ adoptado. El módulo no figura por caracterizarse mediante la media de submuestra, que no depende de $k_{s}$}
+\begin{tabular}{l r r r}
+\toprule
+\textbf{Magnitud} & \textbf{Con (14358-10)} & \textbf{Con Tabla 1 ($k_{s} = 1{,}81$)} & \textbf{Diferencia} \\
+\midrule
+$f_{m,k}$ & 22,88 & 22,80 & -0,35 \% \\
+$\rho_{k}$ & 365,4 & 364,9 & -0,12 \% \\
+\bottomrule
+\end{tabular}
+\end{table}
+% <<<END:anexoC2>>>
 
 \end{document}

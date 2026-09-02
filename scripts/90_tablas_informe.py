@@ -182,11 +182,101 @@ def main():
         r"(UNE-EN 384:2016, \S5.4)",
         "tab:anexoB2", "r c r r r r r r r", cab, filas))
 
+    # =========================================================================
+    # Etapa 3. Los produce 04_valores_caracteristicos.py
+    # =========================================================================
+    sub = C.leer_csv("04_por_submuestra.csv")
+    lote = C.leer_csv("04_valores_lote.csv")
+
+    # --- Bloque: valores por submuestra (5.1) --------------------------------
+    cab = [r"\textbf{Muestra} & \textbf{$n$} & \textbf{$f_{05,i}$} & "
+           r"\textbf{$\bar{E}_{i}$} & \textbf{$\rho_{05,i}$} & \textbf{$k_{s}(n)$} \\",
+           r" & & [\si{\newton\per\square\milli\meter}] & "
+           r"[\si{\newton\per\square\milli\meter}] & "
+           r"[\si{\kilo\gram\per\cubic\meter}] & [--] \\"]
+    filas = [[str(int(s["muestra"])), str(int(s["n"])), n(s["f05"], 2),
+              f'{s["E_media"]:.0f}', n(s["ro05"], 1), n(s["ks_formula"], 4)]
+             for s in sub]
+    tex = sustituir(tex, "submuestras", tabla(
+        "Valores estadísticos por submuestra (UNE-EN 14358:2016). "
+        r"$f_{05}$ por ajuste log-normal, $\rho_{05}$ por ajuste normal y $\bar{E}$ "
+        r"como media aritmética (\S3.3 d)",
+        "c c r r r r", cab, filas))
+
+    # --- Bloque: valores caracteristicos del lote (5.2) ----------------------
+    DEC = {"fmk": 2, "E0mean": 0, "rok": 1}
+    SIM = {"fmk": r"$f_{m,k}$", "E0mean": r"$E_{0,mean}$", "rok": r"$\rho_{k}$"}
+    UNI = {"fmk": r"\si{\newton\per\square\milli\meter}",
+           "E0mean": r"\si{\newton\per\square\milli\meter}",
+           "rok": r"\si{\kilo\gram\per\cubic\meter}"}
+    cab = [r"\textbf{Magnitud} & \textbf{Unidad} & \textbf{Media pond.} & "
+           r"\textbf{Tope} & \textbf{$k_{n}$} & \textbf{Valor} & \textbf{Gobierna} \\"]
+    filas = []
+    for r in lote:
+        s = r["simbolo"]
+        d = DEC[s]
+        filas.append([SIM[s], "[" + UNI[s] + "]", n(r["ponderada"], d),
+                      n(r["acotado"], d), n(r["kn"], 2), r"\textbf{" + n(r["valor"], d) + "}",
+                      r["gobierna"]])
+    tex = sustituir(tex, "caracteristicos", tabla(
+        "Valores característicos del lote (UNE-EN 384:2016, expresiones (11), (12) "
+        r"y (13)). El término «tope» es $1{,}2\,f_{05,\min}$ para la resistencia y "
+        r"$1{,}1\,X_{\min}$ para módulo y densidad; el módulo lleva además el "
+        r"divisor $0{,}95$ de la expresión (12)",
+        "l c r r c r l", cab, filas))
+
+    # --- Bloque: Anexo C.2, parametros del ajuste ---------------------------
+    cab = [r"\textbf{Muestra} & \textbf{$n$} & \textbf{$\bar{y}$} & \textbf{$s_{y}$} & "
+           r"\textbf{piso} & \textbf{$k_{s}$ (14358-10)} & \textbf{$k_{s}$ Tabla 1} & "
+           r"\textbf{$m_{k}$} \\"]
+    fila_r = [[str(int(s["muestra"])), str(int(s["n"])), n(s["fm_y"], 4), n(s["fm_sy"], 4),
+               s["fm_piso"], n(s["ks_formula"], 4), n(s["ks_tabla"], 2), n(s["f05"], 2)]
+              for s in sub]
+    fila_d = [[str(int(s["muestra"])), str(int(s["n"])), n(s["ro_y"], 1), n(s["ro_sy"], 1),
+               s["ro_piso"], n(s["ks_formula"], 4), n(s["ks_tabla"], 2), n(s["ro05"], 1)]
+              for s in sub]
+    t1 = tabla(r"Resistencia a flexión: parámetros del ajuste log-normal. $\bar{y}$ y "
+               r"$s_{y}$ en logaritmos naturales; $m_{k} = f_{05}$ en "
+               r"\si{\newton\per\square\milli\meter}",
+               "c c r r c r r r", cab, fila_r)
+    t2 = tabla(r"Densidad: parámetros del ajuste normal. $\bar{y}$, $s_{y}$ y "
+               r"$m_{k} = \rho_{05}$ en \si{\kilo\gram\per\cubic\meter}",
+               "c c r r c r r r", cab, fila_d)
+
+    cab = [r"\textbf{Muestra} & \textbf{$D$ log-normal} & \textbf{$D$ normal} & "
+           r"\textbf{Mejor ajuste} & \textbf{$f_{05}$ log-normal} & "
+           r"\textbf{$f_{05}$ normal} \\",
+           r" & \multicolumn{2}{c}{[--]} & & "
+           r"\multicolumn{2}{c}{[\si{\newton\per\square\milli\meter}]} \\"]
+    filas = [[str(int(s["muestra"])), n(s["D_lognormal"], 4), n(s["D_normal"], 4),
+              "log-normal" if s["D_lognormal"] <= s["D_normal"] else "normal",
+              n(s["f05"], 2), n(s["f05_normal"], 2)] for s in sub]
+    t3 = tabla("Contraste de la distribución adoptada para la resistencia. Estadístico "
+               "$D$ de Kolmogorov-Smirnov frente a la distribución ajustada; "
+               "un valor menor indica mejor ajuste",
+               "c r r c r r", cab, filas)
+
+    cab = [r"\textbf{Magnitud} & \textbf{Con (14358-10)} & "
+           r"\textbf{Con Tabla 1 ($k_{s} = 1{,}81$)} & \textbf{Diferencia} \\"]
+    filas = []
+    for r in lote:
+        if r["simbolo"] == "E0mean":
+            continue          # la media de submuestra no depende de k_s
+        d = DEC[r["simbolo"]]
+        filas.append([SIM[r["simbolo"]], n(r["valor"], d), n(r["valor_ks_tabla"], d),
+                      n(100 * (r["valor_ks_tabla"] / r["valor"] - 1), 2) + r" \%"])
+    t4 = tabla("Sensibilidad de los valores característicos al $k_{s}(n)$ adoptado. "
+               "El módulo no figura por caracterizarse mediante la media de submuestra, "
+               "que no depende de $k_{s}$",
+               "l r r r", cab, filas)
+    tex = sustituir(tex, "anexoC2", "\n\n".join([t1, t2, t3, t4]))
+
     with open(TEX, "w", encoding="utf-8") as f:
         f.write(tex)
 
     print(f"OK  INFORME.tex actualizado ({len(piezas)} piezas en los anexos)")
-    for b in ("factores", "correccion", "corregidos", "anexoC", "anexoB1", "anexoB2"):
+    for b in ("factores", "correccion", "corregidos", "anexoC", "anexoB1", "anexoB2",
+              "submuestras", "caracteristicos", "anexoC2"):
         print(f"    bloque {b}")
 
 
