@@ -82,8 +82,9 @@ los valores característicos por el procedimiento paramétrico de UNE-EN 14358:2
 asigna la clase resistente correspondiente según UNE-EN 338:2010.
 
 \medskip
-\noindent Se concluye que al lote le corresponde la clase resistente
-\pendiente{clase C asignada}, gobernada por \pendiente{criterio gobernante}.
+% <<<AUTO:resumen>>>
+\noindent Se concluye que al lote le corresponde la clase resistente \textbf{C22} de UNE-EN 338:2010, gobernada por la resistencia característica a flexión $f_{m,k}$ y no por la rigidez.
+% <<<END:resumen>>>
 
 \medskip
 \noindent\emph{Nota: el resumen se redacta al final, cuando los resultados estén cerrados.}
@@ -421,9 +422,11 @@ expresa:
         En el presente caso las \num{258} piezas fueron ensayadas hasta rotura, por lo
         que la densidad se habría determinado sobre probetas pequeñas libres de
         defectos y el ajuste no resultaría de aplicación.
-        \verificar{el archivo de datos no declara el procedimiento de medida de $\rho$;
-        confirmar con el docente. La diferencia es del \SI{4,8}{\percent} y puede
-        alterar la clase resistente resultante}
+        El archivo de datos no declara, sin embargo, el procedimiento de medida de
+        $\rho$, por lo que la hipótesis queda pendiente de confirmación. La diferencia
+        entre una y otra vía es del \SI{4,8}{\percent}; comprobado a posteriori en el
+        apartado~\ref{sec:robustez}, \textbf{no altera la clase resistente asignada},
+        de modo que la indeterminación no compromete el resultado del trabajo.
 \end{enumerate}
 
 \medskip
@@ -699,44 +702,164 @@ más débil.
 \subsection{Asignación de la clase resistente}
 
 Tratándose de una conífera, la asignación se efectúa dentro de las clases C de
-UNE-EN 338:2010. Los tres valores han de satisfacer \textbf{simultáneamente} los
-requisitos de la clase; se asigna la clase más alta que cumple con los tres.
+UNE-EN 338:2010, cuya tabla 1 fija para cada clase un valor mínimo de resistencia
+característica a flexión $f_{m,k}$, de módulo de elasticidad medio paralelo a la fibra
+$E_{0,mean}$ y de densidad característica $\rho_{k}$. Los tres valores han de satisfacer
+\textbf{simultáneamente} el requisito de la clase: se asigna la clase más alta que
+cumple con los tres. La verificación completa, clase por clase, figura en el
+anexo~\ref{anx:clases}.
 
+\medskip
+\noindent\textbf{Edición aplicada.} Se emplea la edición \textbf{2010}, que es la que
+impone el enunciado del trabajo. La precisión no es formal: la edición 2016 de la misma
+norma modifica los requisitos de rigidez y de densidad e introduce clases intermedias,
+de modo que un mismo lote puede recibir clases distintas según la edición aplicada.
+
+\medskip
+\noindent\textbf{Advertencia de unidades.} La tabla 1 de UNE-EN 338 expresa el módulo de
+elasticidad en \si{\kilo\newton\per\square\milli\meter}, mientras que todo el cálculo
+precedente se ha desarrollado en \si{\newton\per\square\milli\meter}. La comparación se
+efectúa por tanto sobre $E_{0,mean}/1000$. Omitir esta conversión haría que cualquier
+clase de la tabla resultase admisible por rigidez.
+
+% <<<AUTO:clase>>>
 \begin{table}[H]
 \centering
-\caption{Verificación de los criterios de asignación}
-\label{tab:clase}
-\begin{tabular}{lcccc}
+\caption{Verificación de los criterios de asignación de UNE-EN 338:2010, tabla 1. La relación es el cociente entre el valor obtenido y el requerido: cumple si es mayor o igual que la unidad}
+\begin{tabular}{l c r r r c}
 \toprule
-\textbf{Criterio} & \textbf{Valor obtenido} & \textbf{Requisito de la clase} &
-\textbf{Relación} & \textbf{Cumple} \\
+\textbf{Criterio} & \textbf{Unidad} & \textbf{Valor obtenido} & \textbf{Requisito de C22} & \textbf{Relación} & \textbf{Cumple} \\
 \midrule
-$f_{m,k}$    [\si{\newton\per\square\milli\meter}] & \pdt & \pdt & \pdt & \pdt \\
-$E_{0,mean}$ [\si{\kilo\newton\per\square\milli\meter}] & \pdt & \pdt & \pdt & \pdt \\
-$\rho_{k}$   [\si{\kilo\gram\per\cubic\meter}] & \pdt & \pdt & \pdt & \pdt \\
+$f_{m,k}$ & [\si{\newton\per\square\milli\meter}] & \textbf{22,88} & 22,00 & 1,040 & sí \\
+$E_{0,mean}$ & [\si{\kilo\newton\per\square\milli\meter}] & \textbf{13,492} & 10,000 & 1,349 & sí \\
+$\rho_{k}$ & [\si{\kilo\gram\per\cubic\meter}] & \textbf{365,4} & 340,0 & 1,075 & sí \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent\textbf{Clase resistente asignada:} \pendiente{clase}.
+\noindent\textbf{Clase resistente asignada: C22.}
 
-\noindent\textbf{Criterio gobernante:} \pendiente{criterio}.
+\noindent\textbf{Criterio gobernante:} $f_{m,k}$. Es el único que impide asignar la clase inmediatamente superior, C24, para la que faltan 1,12~\si{\newton\per\square\milli\meter} (un 4,9~\si{\percent} más). Los otros dos criterios se cumplen con margen.
+% <<<END:clase>>>
+
+\medskip
+\noindent\textbf{Validación del procedimiento.} El algoritmo de asignación se contrastó
+contra un caso resuelto conocido antes de aplicarlo al lote: una madera de frondosa de
+$f_{m,k} = \SI{28}{\newton\per\square\milli\meter}$,
+$E_{0,mean} = \SI{12.3}{\kilo\newton\per\square\milli\meter}$ y
+$\rho_{k} = \SI{510}{\kilo\gram\per\cubic\meter}$, a la que corresponde la clase D24 por
+la edición 2010. El procedimiento implementado devuelve D24, y devuelve D27 al aplicarlo
+sobre la tabla de la edición 2016, coincidiendo en ambos casos con la fuente.
+
+\subsection{Robustez del resultado frente a las decisiones de cálculo}
+\label{sec:robustez}
+
+A lo largo del proceso se han adoptado decisiones que no vienen impuestas por un dato
+del ensayo. Se cuantifica a continuación el efecto de cada una sobre la clase asignada,
+rehaciendo la asignación completa con esa decisión cambiada y manteniendo las restantes.
+
+% <<<AUTO:robustez>>>
+\begin{table}[H]
+\centering
+\caption{Sensibilidad de la clase asignada a las decisiones de criterio. Cada fila rehace la asignación completa cambiando una sola decisión y manteniendo las restantes}
+\begin{tabular}{p{7.2cm} r r c c}
+\toprule
+\textbf{Decisión alternativa} & \textbf{$f_{m,k}$} & \textbf{$\rho_{k}$} & \textbf{Clase} & \textbf{Efecto} \\
+ & [\si{\newton\per\square\milli\meter}] & [\si{\kilo\gram\per\cubic\meter}] & & \\
+\midrule
+Base: log-normal y $k_{s}$ por la expresión \eqref{eq:ks} & 22,88 & 365,4 & C22 & sin efecto \\
+$k_{s}$ de la tabla 1 de UNE-EN 14358 en lugar de \eqref{eq:ks} & 22,80 & 365,4 & C22 & sin efecto \\
+Distribución normal en lugar de log-normal para $f_{m}$ & 20,90 & 365,4 & \textbf{C20} & \textbf{cambia} \\
+Densidad dividida por $1{,}05$ (UNE-EN 384:2016, \S5.3.4) & 22,88 & 348,0 & C22 & sin efecto \\
+\bottomrule
+\end{tabular}
+\end{table}
+% <<<END:robustez>>>
+
+\noindent Únicamente la elección de la distribución altera la clase. Dicha elección, sin
+embargo, no es discrecional: UNE-EN 14358:2016, \S3.2.2, prescribe la distribución
+log-normal para las propiedades de resistencia y reserva la normal para la densidad, y
+el contraste de bondad de ajuste recogido en el anexo~\ref{anx:estadistica} confirma que
+la log-normal ajusta mejor en las tres submuestras. Se deja constancia, no obstante, de
+que es el punto de mayor sensibilidad de todo el trabajo.
+
+\medskip
+\noindent El ajuste de densidad del \S5.3.4 de UNE-EN 384:2016, que quedó pendiente de
+confirmación por no declararse en el archivo de datos cómo se midió $\rho$, resulta
+\textbf{no determinante}: aun aplicándolo, la densidad característica sigue superando el
+requisito de la clase asignada.
 
 % =============================================================================
 \section{Conclusiones}
 % -----------------------------------------------------------------------------
 
-\pendiente{redactar al cierre. Deben cubrirse, como mínimo:}
+% <<<AUTO:conclusion>>>
+\noindent Al lote de madera aserrada de Picea objeto del presente trabajo, constituido por 258 piezas clasificadas visualmente y repartidas en tres escuadrías, le corresponde la clase resistente \textbf{C22} de UNE-EN 338:2010.
+
+\begin{table}[H]
+\centering
+\caption{Resumen del resultado}
+\begin{tabular}{l r r r c}
+\toprule
+\textbf{Magnitud} & \textbf{Obtenido} & \textbf{Exigido por C22} & \textbf{Margen} & \textbf{Unidad} \\
+\midrule
+$f_{m,k}$ & \textbf{22,88} & 22,00 & 4,0~\si{\percent} & [\si{\newton\per\square\milli\meter}] \\
+$E_{0,mean}$ & \textbf{13,492} & 10,000 & 34,9~\si{\percent} & [\si{\kilo\newton\per\square\milli\meter}] \\
+$\rho_{k}$ & \textbf{365,4} & 340,0 & 7,5~\si{\percent} & [\si{\kilo\gram\per\cubic\meter}] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent La clase la gobierna $f_{m,k}$: los otros dos criterios se cumplen con holgura, y para alcanzar la clase C24 faltarían 1,12~\si{\newton\per\square\milli\meter} de resistencia característica, un 4,9~\si{\percent} por encima del valor obtenido.
+% <<<END:conclusion>>>
+
+\subsection{Sobre el criterio gobernante}
+
+El resultado contradice la expectativa habitual en madera aserrada de conífera, según la
+cual es la rigidez la que limita la clase mientras la resistencia sobra. Aquí ocurre lo
+contrario: el módulo de elasticidad excede holgadamente el requisito, y es la resistencia
+característica a flexión la que impide subir de clase. La lectura material es que el
+lote es rígido en relación con su resistencia; dicho de otro modo, la clasificación
+visual retuvo piezas de buen módulo cuya resistencia se ve penalizada por la dispersión
+del percentil del \SI{5}{\percent}.
+
+De ello se sigue una consecuencia práctica: cualquier mejora de la clase pasa por
+reducir la dispersión de la resistencia, no por seleccionar piezas más rígidas. Un
+criterio de clasificación visual más severo sobre los nudos, que son los que gobiernan
+la cola inferior de la distribución de resistencia, tendría más efecto sobre la clase
+asignada que cualquier actuación sobre la rigidez.
+
+\subsection{Sobre la homogeneidad del lote}
+
+En las tres expresiones \eqref{eq:fk}, \eqref{eq:E0} y \eqref{eq:rok} gobernó la media
+ponderada de las submuestras, y no el término acotado por la submuestra más
+desfavorable. La dispersión entre las tres escuadrías no es, por tanto, suficiente para
+que ninguna de ellas arrastre al conjunto: pese a tratarse de tres secciones
+transversales distintas, el lote se comporta como un conjunto homogéneo y admite una
+única clase resistente. De haber gobernado el otro término, el resultado habría quedado
+condicionado por la fracción más débil y habría sido obligado plantearse si procedía
+caracterizar las escuadrías por separado.
+
+\subsection{Limitaciones y decisiones adoptadas}
 
 \begin{itemize}
-  \item La clase resistente asignada y el criterio que la gobierna.
-  \item El margen existente hasta la clase inmediatamente superior, y qué haría falta
-        para alcanzarla.
-  \item La homogeneidad del lote: si en las expresiones \eqref{eq:fk} a \eqref{eq:rok}
-        gobernó el término del mínimo referido a la submuestra más desfavorable, ello
-        indica que la clasificación visual no produjo un lote homogéneo.
-  \item Las limitaciones del estudio y las decisiones adoptadas ante datos no
-        declarados, en particular el tratamiento de la densidad.
+  \item \textbf{Densidad.} El archivo de datos no declara si $\rho$ se midió sobre
+        probeta pequeña libre de defectos o sobre la pieza completa. En el segundo caso
+        procedería el divisor $1{,}05$ del \S5.3.4 de UNE-EN 384:2016. Se ha calculado
+        el resultado por ambas vías y \textbf{la clase no cambia}, por lo que la
+        indeterminación no afecta a la conclusión; queda planteada la consulta al
+        efecto de dejar cerrado el dato.
+  \item \textbf{Distribución estadística.} Es la única decisión con capacidad para
+        alterar la clase asignada. Se adopta la log-normal para la resistencia por
+        prescripción de UNE-EN 14358:2016, \S3.2.2, decisión respaldada además por el
+        contraste de bondad de ajuste realizado sobre las tres submuestras.
+  \item \textbf{Módulo de cortadura.} Se ha empleado $G = \Eml/16$ por imposición del
+        enunciado. Al tratarse del módulo local y no del global, su incidencia sobre
+        $\Eml$ es en todo caso reducida.
+  \item \textbf{Alcance de la caracterización.} Los valores obtenidos caracterizan
+        \emph{este} lote, procedente de piezas que superaron un criterio de
+        clasificación visual determinado. No son extrapolables a otro origen ni a otro
+        criterio de clasificación sin repetir el ensayo.
 \end{itemize}
 
 % =============================================================================
@@ -1509,5 +1632,48 @@ $\rho_{k}$ & 365,4 & 364,9 & -0,12 \% \\
 \end{tabular}
 \end{table}
 % <<<END:anexoC2>>>
+
+% =============================================================================
+\section{Verificación frente a la tabla de clases resistentes}
+\label{anx:clases}
+% -----------------------------------------------------------------------------
+
+Se recoge la comprobación de los tres valores característicos del lote frente a los
+requisitos de todas las clases C de UNE-EN 338:2010, y no sólo frente a la clase
+asignada. La columna «relación» es el cociente entre el valor obtenido y el requerido:
+un valor mayor o igual que la unidad indica que ese criterio se cumple. La clase
+asignada es la más alta cuyas tres relaciones son simultáneamente mayores o iguales que
+la unidad.
+
+Se recorre la tabla completa y no se detiene la comprobación en el primer
+incumplimiento, de modo que quede documentado que ninguna clase superior resulta
+admisible: los requisitos de la tabla crecen conjuntamente, pero no lo hacen de forma
+proporcional entre las tres magnitudes.
+
+% <<<AUTO:anexoD>>>
+\begin{table}[H]
+\centering
+\caption{Verificación de los valores característicos del lote frente a todas las clases C de UNE-EN 338:2010, tabla 1. En negrita, la clase asignada}
+\begin{tabular}{c r r r r r r c}
+\toprule
+\textbf{Clase} & \textbf{$f_{m,k}$ mín.} & \textbf{rel.} & \textbf{$E_{0,mean}$ mín.} & \textbf{rel.} & \textbf{$\rho_{k}$ mín.} & \textbf{rel.} & \textbf{Cumple} \\
+ & [\si{\newton\per\square\milli\meter}] & [--] & [\si{\kilo\newton\per\square\milli\meter}] & [--] & [\si{\kilo\gram\per\cubic\meter}] & [--] & \\
+\midrule
+C14 & 14 & 1,634 & 7,0 & 1,927 & 290 & 1,260 & sí \\
+C16 & 16 & 1,430 & 8,0 & 1,687 & 310 & 1,179 & sí \\
+C18 & 18 & 1,271 & 9,0 & 1,499 & 320 & 1,142 & sí \\
+C20 & 20 & 1,144 & 9,5 & 1,420 & 330 & 1,107 & sí \\
+\textbf{C22} & 22 & 1,040 & 10,0 & 1,349 & 340 & 1,075 & \textbf{sí} \\
+C24 & 24 & 0,953 & 11,0 & 1,227 & 350 & 1,044 & no \\
+C27 & 27 & 0,847 & 11,5 & 1,173 & 370 & 0,987 & no \\
+C30 & 30 & 0,763 & 12,0 & 1,124 & 380 & 0,961 & no \\
+C35 & 35 & 0,654 & 13,0 & 1,038 & 400 & 0,913 & no \\
+C40 & 40 & 0,572 & 14,0 & 0,964 & 420 & 0,870 & no \\
+C45 & 45 & 0,508 & 15,0 & 0,899 & 440 & 0,830 & no \\
+C50 & 50 & 0,458 & 16,0 & 0,843 & 460 & 0,794 & no \\
+\bottomrule
+\end{tabular}
+\end{table}
+% <<<END:anexoD>>>
 
 \end{document}

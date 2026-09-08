@@ -1,0 +1,6 @@
+﻿clave;escenario;fmk;rok;clase
+[-];[-];[N/mm2];[kg/m3];[-]
+base;base: log-normal y k_s por la formula (10);22,8757;365,365;C22
+ks_tabla;k_s de la Tabla 1 en vez de la formula (10);22,796;365,365;C22
+normal;distribucion normal en vez de log-normal;20,9027;365,365;C20
+densidad105;densidad dividida por 1,05 (EN 384 5.3.4);22,8757;347,967;C22

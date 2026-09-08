@@ -16,6 +16,10 @@ versionados igual, para poder ver en el historial de git qué cambió un ajuste 
 | `04_por_submuestra.csv` | `04_valores_caracteristicos.py` | 3 filas, una por submuestra: `n`, `k_s` por fórmula y por tabla, media y desvío de la transformada, si se activó el piso de CoV, `f_05` (log-normal y normal), `ro_05`, `E` medio y los estadísticos `D` de Kolmogorov-Smirnov |
 | `04_valores_lote.csv` | ídem | 3 filas, una por magnitud: media ponderada, término acotado, cuál gobierna, `k_n`, divisor y el valor característico del lote |
 | `04_resumen_etapa3.md` | ídem | Percentiles por submuestra, bondad de ajuste, combinación y sensibilidad al `k_s` de la Tabla 1 |
+| `05_verificacion_clases.csv` | `05_clase_resistente.py` | 12 filas, una por clase C de EN 338:2010: requisito y relación obtenido/requerido de cada una de las tres magnitudes, si cumple y qué criterio la frena |
+| `05_clase_asignada.csv` | ídem | 1 fila: la clase asignada, el criterio gobernante, la clase siguiente y lo que falta para alcanzarla, y el resultado del escenario con densidad dividida por 1,05 |
+| `05_robustez.csv` | ídem | 4 filas: la clase que sale al cambiar una decisión de criterio por vez. La columna `clave` es el identificador sin comas que consume el 90 |
+| `05_resumen_etapa4.md` | ídem | La asignación con su verificación, la validación contra el caso resuelto de castaño y la discusión de robustez |
 
 ## Formato de los CSV
 
@@ -36,12 +40,19 @@ importación:
 
 ## De acá salen las tablas del informe
 
-`scripts/90_tablas_informe.py` lee `03_valores_corregidos.csv`, `04_por_submuestra.csv` y
-`04_valores_lote.csv`, y reescribe con ellos los bloques `% <<<AUTO:...>>>` del `INFORME.tex`:
-`factores`, `correccion` y `corregidos` (las tres tablas de §4.2), `submuestras` (§5.1),
-`caracteristicos` (§5.2), `anexoB1`, `anexoB2`, `anexoC` y `anexoC2`. O sea que
+`scripts/90_tablas_informe.py` lee `03_valores_corregidos.csv`, `04_por_submuestra.csv`,
+`04_valores_lote.csv`, `05_verificacion_clases.csv`, `05_clase_asignada.csv` y
+`05_robustez.csv`, y reescribe con ellos los bloques `% <<<AUTO:...>>>` del `INFORME.tex`:
+`resumen` (la portada), `factores`, `correccion` y `corregidos` (las tres tablas de §4.2),
+`submuestras` (§5.1), `caracteristicos` (§5.2), `clase` (§5.3), `robustez` (§5.4),
+`conclusion` (§6) y `anexoB1`, `anexoB2`, `anexoC`, `anexoC2` y `anexoD`. O sea que
 un número mal en un CSV aparece mal en el PDF sin que nadie lo tipee: la verificación se hace
 acá, no en el `.tex`.
+
+> Ni la clase asignada ni el criterio gobernante están escritos a mano en ningún lado del
+> `.tex`: salen de `05_clase_asignada.csv`. Si un ajuste de criterio cambiara la clase, el
+> resumen de la portada, la tabla de verificación y las conclusiones se actualizan solos al
+> correr la cadena.
 
 El `90` es **consumidor puro**: no calcula nada. Si el informe necesita un número nuevo, primero
 tiene que existir en un CSV.

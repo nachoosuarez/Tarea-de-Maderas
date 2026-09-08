@@ -27,7 +27,7 @@ En una línea: **de 258 ensayos individuales a un trío de valores característi
   percentil 5 % de resistencia y de densidad, y el valor medio del módulo. Se calculan por
   muestra y después se combinan penalizando la dispersión entre muestras.
 - **Asignar la clase.** Los tres valores tienen que cumplir simultáneamente los mínimos de
-  la clase; la que gobierna suele ser la rigidez, no la resistencia.
+  la clase. Lo habitual es que gobierne la rigidez; en este lote gobierna la resistencia.
 - **Escribir el informe.** Resumen, objetivos, datos de partida, análisis, resultados y
   conclusiones. Las tablas largas van a anexos.
 
@@ -86,7 +86,13 @@ figuran. Las tres muestras son tres secciones transversales distintas:
       **`f_m,k` = 22,88 N/mm²**, **`E_0,mean`= 13 492 N/mm²**, **`ρ_k` = 365,4 kg/m³**. En las
       tres gobierna la media ponderada, o sea que el lote es homogéneo. Ver
       [`03-semana-04_valores-caracteristicos/`](03-semana-04_valores-caracteristicos/).
-- [ ] **Semana 5** — Clase resistente y borrador del informe.
+- [x] **Semana 5** — Clase resistente. Verificados los tres valores contra las doce clases C
+      de UNE-EN 338:2010, al lote le corresponde la clase **C22**, gobernada por la
+      **resistencia** (`f_m,k` = 22,88 contra los 22 que exige) y no por la rigidez, que sobra
+      un 35 %. Para subir a C24 faltan 1,12 N/mm², un 4,9 %. El divisor 1,05 de densidad
+      resultó **no determinante**; la única decisión capaz de mover la clase es la
+      distribución estadística. Ver
+      [`04-semana-05_clase-resistente/`](04-semana-05_clase-resistente/).
 - [ ] **Semanas 6-8** — Redacción, anexos y revisión cruzada.
 
 ## Cómo moverse por el repo
@@ -114,7 +120,8 @@ y una checklist. La justificación completa de cada paso está en
 En la raíz, fuera de las carpetas por semana, está [`INFORME.tex`](INFORME.tex): **el informe
 completo en LaTeX**, en un único archivo autocontenido. Se sube tal cual a Overleaf (New
 Project → Upload Project, o pegarlo en un proyecto en blanco) y compila con **pdfLaTeX** sin
-tocar nada. Compilado localmente con MiKTeX: **23 páginas, sin errores**.
+tocar nada. Compilado localmente con MiKTeX (tres pasadas, por las referencias cruzadas y los
+anchos de `longtable`): **26 páginas, sin errores**.
 
 > Sí tira 9 avisos `Infinite glue shrinkage found in box being split`, en las páginas de los
 > anexos. Los produce `longtable` al partir una tabla larga entre páginas y son
@@ -158,7 +165,7 @@ reescribe `scripts/90_tablas_informe.py` a partir de los CSV de `resultados/`. L
 mano vive fuera de esos bloques y nunca se pisa. Secuencia después de tocar un cálculo:
 
 ```bash
-python scripts/03_correcciones_en384.py && python scripts/04_valores_caracteristicos.py && python scripts/90_tablas_informe.py
+python scripts/03_correcciones_en384.py && python scripts/04_valores_caracteristicos.py && python scripts/05_clase_resistente.py && python scripts/90_tablas_informe.py
 ```
 
 ## Convenciones

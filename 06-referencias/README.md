@@ -11,7 +11,7 @@ pudo leer de la fuente va marcado **VERIFICAR**.
 | **UNE-EN 408:2010** | Método de ensayo y ecuaciones de `f_m` y `E_m` | Vía diapositivas S03E02 |
 | **UNE-EN 384:2016** | Ajuste a condiciones de referencia, combinación de submuestras | `LIBROS Y NORMAS\Normas para trabajo de caracterización_Madera.zip` |
 | **UNE-EN 14358:2016** | Valores característicos | Mismo zip |
-| **UNE-EN 338:2010** | Clases resistentes | Vía diapositivas S03E02 p.54-56 |
+| **UNE-EN 338:2010** | Clases resistentes | Vía diapositivas S03E02 **p.55** (la p.56-57 es la edición 2016). **No está en el zip de AENOR** |
 | **S03E02 — Madera aserrada 2** | Diapositivas del curso, 68 páginas | `01-CLAUDE\ESTRUCTURA DE MADERA\Teorico-2025\` |
 
 > Los PDF de las normas **no se suben al repo**: son material licenciado de AENOR. Cada uno
@@ -39,7 +39,7 @@ pudo leer de la fuente va marcado **VERIFICAR**.
 | 14 | Método paramétrico: log-normal para resistencia, normal para densidad | EN 14358:2016 §3.2.2, p.7-8, fórm. (1) a (6) |
 | 14b | `k_s(n) = (6,5n + 6)/(3,7n − 3)` | EN 14358:2016 §3.2.2 f), **fórmula (10)** de la propia norma, p.8, y Tabla 1 |
 | 14c | El valor característico medio de una propiedad de rigidez es la media aritmética | EN 14358:2016 §3.3 d), p.10, remite a la fórm. (14) |
-| 15 | Asignación de clase resistente | EN 338:2010 — S03E02 p.54 y p.56 |
+| 15 | Tabla 1 de clases resistentes, coníferas C14 a C50 | EN 338:2010 Tabla 1 — S03E02 **p.55**, renderizada a 420 dpi. `f_m,k` 14/16/18/20/22/24/27/30/35/40/45/50 N/mm²; `E_0,medio` 7/8/9/9,5/10/11/11,5/12/13/14/15/16 **kN/mm²**; `ro_k` 290/310/320/330/340/350/370/380/400/420/440/460 kg/m³ |
 | 16 | Modelos de tabla para el informe | EN 384:2016 Anexo A (normativo), Tablas A.1 y A.3 |
 
 ## Verificado contra la norma (ya no son pendientes)
@@ -89,10 +89,22 @@ pudo leer de la fuente va marcado **VERIFICAR**.
 ## Valores que quedan pendientes de verificar
 
 - **Cómo se midió `ro`** — define si corresponde el ajuste por 1,05 del §5.3.4. El archivo de
-  datos no lo declara. Preguntar al docente.
-- **Tabla de clases resistentes de EN 338:2010** — todavía no leída. Es la semana 5.
+  datos no lo declara. Preguntar al docente. Ya **no es decisivo**: se evaluó por las dos vías
+  en la semana 5 y la clase asignada es C22 en ambos casos.
+
+No queda ninguna otra fórmula sin contrastar contra su fuente.
 
 ## Trampas conocidas
+
+- **EN 338 no está en el zip de AENOR.** El zip trae solo EN 384 y EN 14358. La tabla de
+  clases sale de la diapositiva, y la letra del trabajo lo autoriza expresamente: «para ello
+  basta con las diapositivas del curso (S03E02)».
+- **Las diapositivas traen las DOS ediciones de EN 338, sin decirlo fuerte.** La p.54-55 es la
+  **2010** y la p.56-57 es la **2016**. El mismo ejemplo de castaño resuelto ahí da **D24 por
+  la 2010 y D27 por la 2016**: la edición cambia la respuesta. La letra manda la **2010**.
+- **La Tabla 1 de EN 338 da `E_0,medio` en kN/mm², no en N/mm².** Todo el resto del trabajo
+  está en N/mm². Sin dividir por 1000, los 13 492 N/mm² del lote superan cualquier fila de la
+  tabla y la clase saldría C50 por rigidez. Es el único cambio de unidades de todo el trabajo.
 
 - **El OCR de los PDF corrompe símbolos.** Ya pasó en este trabajo: la fórmula (6) de EN 384
   se extrajo como `l_et = l − 5·a_f`, que da longitudes negativas. Contra la imagen de la

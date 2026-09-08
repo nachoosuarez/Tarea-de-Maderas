@@ -271,12 +271,141 @@ def main():
                "l r r r", cab, filas)
     tex = sustituir(tex, "anexoC2", "\n\n".join([t1, t2, t3, t4]))
 
+    # =========================================================================
+    # Etapa 4. Los produce 05_clase_resistente.py
+    # =========================================================================
+    ver = C.leer_csv("05_verificacion_clases.csv")
+    asig = C.leer_csv("05_clase_asignada.csv")[0]
+    rob = C.leer_csv("05_robustez.csv")
+
+    CLASE = asig["clase"]
+    # Los CSV traen los simbolos sin coma (la coma la destruye leer_csv); la notacion
+    # de imprenta se arma aca.
+    TEXSIM = {"fmk": r"$f_{m,k}$", "E0mean": r"$E_{0,mean}$", "rok": r"$\rho_{k}$"}
+    TEXUNI = {"fmk": r"\si{\newton\per\square\milli\meter}",
+              "E0mean": r"\si{\kilo\newton\per\square\milli\meter}",
+              "rok": r"\si{\kilo\gram\per\cubic\meter}"}
+    OBT = {"fmk": (asig["fmk"], 2), "E0mean": (asig["E0mean_kn"], 3),
+           "rok": (asig["rok"], 1)}
+
+    def simbolos(campo):
+        """'fmk rok' -> '$f_{m,k}$ y $\\rho_{k}$'."""
+        cl = [TEXSIM[s] for s in str(asig[campo]).split() if s in TEXSIM]
+        if not cl:
+            return "ninguno"
+        return cl[0] if len(cl) == 1 else ", ".join(cl[:-1]) + " y " + cl[-1]
+
+    # --- Bloque: verificacion de la clase asignada (6.3) ---------------------
+    cab = [r"\textbf{Criterio} & \textbf{Unidad} & \textbf{Valor obtenido} & "
+           r"\textbf{Requisito de " + CLASE + r"} & \textbf{Relación} & "
+           r"\textbf{Cumple} \\"]
+    filas = []
+    for s in ("fmk", "E0mean", "rok"):
+        val, d = OBT[s]
+        rel = asig[s + "_rel"]
+        filas.append([TEXSIM[s], "[" + TEXUNI[s] + "]", r"\textbf{" + n(val, d) + "}",
+                      n(asig[s + "_req"], d), n(rel, 3),
+                      "sí" if rel >= 1 else "no"])
+    t = tabla("Verificación de los criterios de asignación de UNE-EN 338:2010, "
+              "tabla 1. La relación es el cociente entre el valor obtenido y el "
+              "requerido: cumple si es mayor o igual que la unidad",
+              "l c r r r c", cab, filas)
+    txt = [t, "",
+           r"\noindent\textbf{Clase resistente asignada: " + CLASE + r".}", "",
+           r"\noindent\textbf{Criterio gobernante:} " + simbolos("gobierna") +
+           r". Es el único que impide asignar la clase inmediatamente superior, " +
+           str(asig["clase_siguiente"]) + r", para la que faltan " +
+           n(asig["falta_abs"], 2) + r"~\si{\newton\per\square\milli\meter} " +
+           r"(un " + n(asig["falta_pct"], 1) + r"~\si{\percent} más). Los otros dos " +
+           r"criterios se cumplen con margen."]
+    tex = sustituir(tex, "clase", "\n".join(txt))
+
+    # --- Bloque: resumen (portada) -------------------------------------------
+    tex = sustituir(tex, "resumen",
+                    r"\noindent Se concluye que al lote le corresponde la clase "
+                    r"resistente \textbf{" + CLASE + r"} de UNE-EN 338:2010, "
+                    r"gobernada por la resistencia característica a flexión "
+                    r"$f_{m,k}$ y no por la rigidez.")
+
+    # --- Bloque: robustez (6.4) ----------------------------------------------
+    ETIQ = {
+        "base": r"Base: log-normal y $k_{s}$ por la expresión \eqref{eq:ks}",
+        "ks_tabla": r"$k_{s}$ de la tabla 1 de UNE-EN 14358 en lugar de "
+                    r"\eqref{eq:ks}",
+        "normal": r"Distribución normal en lugar de log-normal para $f_{m}$",
+        "densidad105": r"Densidad dividida por $1{,}05$ "
+                       r"(UNE-EN 384:2016, \S5.3.4)",
+    }
+    cab = [r"\textbf{Decisión alternativa} & \textbf{$f_{m,k}$} & "
+           r"\textbf{$\rho_{k}$} & \textbf{Clase} & \textbf{Efecto} \\",
+           r" & [\si{\newton\per\square\milli\meter}] & "
+           r"[\si{\kilo\gram\per\cubic\meter}] & & \\"]
+    filas = []
+    for r in rob:
+        cambia = r["clase"] != CLASE
+        filas.append([ETIQ.get(r["clave"], str(r["escenario"])),
+                      n(r["fmk"], 2), n(r["rok"], 1),
+                      (r"\textbf{" + r["clase"] + "}") if cambia else r["clase"],
+                      r"\textbf{cambia}" if cambia else "sin efecto"])
+    tex = sustituir(tex, "robustez", tabla(
+        "Sensibilidad de la clase asignada a las decisiones de criterio. Cada fila "
+        "rehace la asignación completa cambiando una sola decisión y manteniendo "
+        "las restantes",
+        "p{7.2cm} r r c c", cab, filas))
+
+    # --- Bloque: conclusion numerica -----------------------------------------
+    txt = [r"\noindent Al lote de madera aserrada de Picea objeto del presente "
+           r"trabajo, constituido por " + str(len(piezas)) + r" piezas clasificadas "
+           r"visualmente y repartidas en tres escuadrías, le corresponde la clase "
+           r"resistente \textbf{" + CLASE + r"} de UNE-EN 338:2010.",
+           "",
+           r"\begin{table}[H]", r"\centering",
+           r"\caption{Resumen del resultado}",
+           r"\begin{tabular}{l r r r c}", r"\toprule",
+           r"\textbf{Magnitud} & \textbf{Obtenido} & \textbf{Exigido por " + CLASE +
+           r"} & \textbf{Margen} & \textbf{Unidad} \\", r"\midrule"]
+    for s in ("fmk", "E0mean", "rok"):
+        val, d = OBT[s]
+        txt.append(" & ".join([
+            TEXSIM[s], r"\textbf{" + n(val, d) + "}", n(asig[s + "_req"], d),
+            n((asig[s + "_rel"] - 1) * 100, 1) + r"~\si{\percent}",
+            "[" + TEXUNI[s] + "]"]) + r" \\")
+    txt += [r"\bottomrule", r"\end{tabular}", r"\end{table}", "",
+            r"\noindent La clase la gobierna " + simbolos("gobierna") +
+            r": los otros dos criterios se cumplen con holgura, y para alcanzar la "
+            r"clase " + str(asig["clase_siguiente"]) + r" faltarían " +
+            n(asig["falta_abs"], 2) + r"~\si{\newton\per\square\milli\meter} de "
+            r"resistencia característica, un " + n(asig["falta_pct"], 1) +
+            r"~\si{\percent} por encima del valor obtenido."]
+    tex = sustituir(tex, "conclusion", "\n".join(txt))
+
+    # --- Bloque: anexo D, verificacion clase por clase ------------------------
+    cab = [r"\textbf{Clase} & \textbf{$f_{m,k}$ mín.} & \textbf{rel.} & "
+           r"\textbf{$E_{0,mean}$ mín.} & \textbf{rel.} & \textbf{$\rho_{k}$ mín.} & "
+           r"\textbf{rel.} & \textbf{Cumple} \\",
+           r" & [\si{\newton\per\square\milli\meter}] & [--] & "
+           r"[\si{\kilo\newton\per\square\milli\meter}] & [--] & "
+           r"[\si{\kilo\gram\per\cubic\meter}] & [--] & \\"]
+    filas = []
+    for v in ver:
+        marca = (lambda x: r"\textbf{" + x + "}") if v["clase"] == CLASE else (lambda x: x)
+        filas.append([marca(v["clase"]),
+                      n(v["fmk_req"], 0), n(v["fmk_rel"], 3),
+                      n(v["E0mean_req"], 1), n(v["E0mean_rel"], 3),
+                      n(v["rok_req"], 0), n(v["rok_rel"], 3),
+                      marca("sí" if v["cumple"] == "si" else "no")])
+    tex = sustituir(tex, "anexoD", tabla(
+        "Verificación de los valores característicos del lote frente a todas las "
+        "clases C de UNE-EN 338:2010, tabla 1. En negrita, la clase asignada",
+        "c r r r r r r c", cab, filas))
+
     with open(TEX, "w", encoding="utf-8") as f:
         f.write(tex)
 
     print(f"OK  INFORME.tex actualizado ({len(piezas)} piezas en los anexos)")
     for b in ("factores", "correccion", "corregidos", "anexoC", "anexoB1", "anexoB2",
-              "submuestras", "caracteristicos", "anexoC2"):
+              "submuestras", "caracteristicos", "anexoC2",
+              "clase", "resumen", "robustez", "conclusion", "anexoD"):
         print(f"    bloque {b}")
 
 
