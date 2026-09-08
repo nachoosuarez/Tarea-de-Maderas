@@ -20,6 +20,7 @@ versionados igual, para poder ver en el historial de git qué cambió un ajuste 
 | `05_clase_asignada.csv` | ídem | 1 fila: la clase asignada, el criterio gobernante, la clase siguiente y lo que falta para alcanzarla, y el resultado del escenario con densidad dividida por 1,05 |
 | `05_robustez.csv` | ídem | 4 filas: la clase que sale al cambiar una decisión de criterio por vez. La columna `clave` es el identificador sin comas que consume el 90 |
 | `05_resumen_etapa4.md` | ídem | La asignación con su verificación, la validación contra el caso resuelto de castaño y la discusión de robustez |
+| `91_revision_cruzada.md` | `91_revision_cruzada.py` | El acta de la auditoría del `INFORME.tex`: cada número redactado a mano con su valor impreso, el recalculado desde los datos y el veredicto, más la lista de lo que el script **no** puede comprobar |
 
 ## Formato de los CSV
 
@@ -56,3 +57,15 @@ acá, no en el `.tex`.
 
 El `90` es **consumidor puro**: no calcula nada. Si el informe necesita un número nuevo, primero
 tiene que existir en un CSV.
+
+## Y de acá se audita el resto del informe
+
+Lo que el `90` no cubre son los números **redactados a mano** en el texto corrido del informe.
+De esos se ocupa `scripts/91_revision_cruzada.py`, que los recalcula desde los datos crudos
+—no desde los CSV— y deja el acta en `91_revision_cruzada.md`.
+
+> **Por qué desde los datos crudos y no desde el CSV:** `comun.guardar_csv` almacena los flotantes
+> con `f"{v:.6g}"`, o sea **6 cifras significativas**. En un valor de 5 dígitos como el máximo de
+> `E_m,l` de la muestra 1 eso ya mueve el último dígito impreso (queda 19720,5 en el CSV, cuando
+> el valor verdadero redondea a 19721). Un auditor que leyera el CSV reportaría una diferencia
+> falsa. Por eso el 91 importa las funciones de `02_propiedades_por_pieza.py` y rehace la cuenta.

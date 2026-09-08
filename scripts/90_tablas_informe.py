@@ -42,9 +42,23 @@ def sustituir(texto, nombre, contenido):
     return patron.sub(lambda _: nuevo, texto)
 
 
+def corto(caption):
+    """Titulo breve para el indice de tablas.
+
+    Las captions llevan la explicacion del criterio detras del titulo, separada
+    por un punto. En el cuerpo eso esta bien; en el \\listoftables convierte el
+    indice en parrafos. Se corta en el primer punto seguido de espacio, que no
+    aparece dentro de '§5.4.3' ni de '(11), (12) y (13))' porque ahi el punto no
+    lleva espacio detras.
+    """
+    if len(caption) <= 70 or ". " not in caption:
+        return caption
+    return caption.split(". ", 1)[0]
+
+
 def tabla(caption, colspec, cabecera, filas, ancla="H"):
     out = [r"\begin{table}[" + ancla + "]", r"\centering",
-           r"\caption{" + caption + "}",
+           r"\caption[" + corto(caption) + "]{" + caption + "}",
            r"\begin{tabular}{" + colspec + "}", r"\toprule"]
     out += cabecera
     out.append(r"\midrule")
@@ -56,12 +70,13 @@ def tabla(caption, colspec, cabecera, filas, ancla="H"):
 
 def longtable(caption, etiqueta, colspec, cabecera, filas):
     cab = "\n".join(cabecera)
+    brev = corto(caption)
     out = [r"{\footnotesize",
            r"\begin{longtable}{" + colspec + "}",
-           r"\caption{" + caption + r"}\label{" + etiqueta + r"}\\",
+           r"\caption[" + brev + "]{" + caption + r"}\label{" + etiqueta + r"}\\",
            r"\toprule", cab, r"\midrule", r"\endfirsthead",
            r"\multicolumn{" + str(colspec.count("r") + colspec.count("c") + colspec.count("l")) +
-           r"}{l}{\footnotesize\itshape " + caption + r" (continuación)}\\",
+           r"}{l}{\footnotesize\itshape " + brev + r" (continuación)}\\",
            r"\toprule", cab, r"\midrule", r"\endhead",
            r"\midrule \multicolumn{" + str(colspec.count("r") + colspec.count("c") + colspec.count("l")) +
            r"}{r}{\footnotesize\itshape continúa en la página siguiente}\\",
@@ -149,9 +164,8 @@ def main():
                              "c c r r r r r", cab,
                              descriptiva(grupos, piezas, clave, dec)))
     tex = sustituir(tex, "corregidos", "\n\n".join(bloques))
-
-    # --- Bloque: Anexo C, misma descriptiva ---------------------------------
-    tex = sustituir(tex, "anexoC", "\n\n".join(bloques))
+    # El anexo C repetia estas tres tablas identicas. Se quito la subseccion:
+    # la descriptiva se discute en el 4.2 y en el anexo solo gastaba pagina.
 
     # --- Bloque: Anexo B.1 ---------------------------------------------------
     cab = [r"\textbf{Viga} & \textbf{M} & \textbf{$b$} & \textbf{$h$} & \textbf{$CH$} & "
@@ -321,11 +335,28 @@ def main():
     tex = sustituir(tex, "clase", "\n".join(txt))
 
     # --- Bloque: resumen (portada) -------------------------------------------
-    tex = sustituir(tex, "resumen",
-                    r"\noindent Se concluye que al lote le corresponde la clase "
-                    r"resistente \textbf{" + CLASE + r"} de UNE-EN 338:2010, "
-                    r"gobernada por la resistencia característica a flexión "
-                    r"$f_{m,k}$ y no por la rigidez.")
+    # Los tres valores y el margen salen de los CSV, no se tipean: si un ajuste de
+    # criterio cambiara el resultado, el resumen de la portada se corrige solo.
+    holgados = [s for s in ("fmk", "E0mean", "rok")
+                if s not in str(asig["gobierna"]).split()]
+    txt = [r"\noindent Los valores característicos del lote resultan " +
+           r"$f_{m,k} = \SI{" + n(asig["fmk"], 2) +
+           r"}{\newton\per\square\milli\meter}$, " +
+           r"$E_{0,mean} = \SI{" + n(asig["E0mean_kn"], 2) +
+           r"}{\kilo\newton\per\square\milli\meter}$ y " +
+           r"$\rho_{k} = \SI{" + n(asig["rok"], 1) +
+           r"}{\kilo\gram\per\cubic\meter}$. Con ellos le corresponde la clase "
+           r"resistente \textbf{" + CLASE + r"} de UNE-EN 338:2010. La asignación "
+           r"la gobierna " + simbolos("gobierna") + r": para alcanzar la clase "
+           r"inmediatamente superior, " + str(asig["clase_siguiente"]) +
+           r", faltan \SI{" + n(asig["falta_abs"], 2) +
+           r"}{\newton\per\square\milli\meter}, un \SI{" +
+           n(asig["falta_pct"], 1) + r"}{\percent}, mientras que los otros dos "
+           r"criterios se cumplen con márgenes del \SI{" +
+           r"}{\percent} y del \SI{".join(
+               n(100 * (asig[s + "_rel"] - 1), 0) for s in holgados) +
+           r"}{\percent} sobre lo exigido."]
+    tex = sustituir(tex, "resumen", "\n".join(txt))
 
     # --- Bloque: robustez (6.4) ----------------------------------------------
     ETIQ = {
@@ -403,7 +434,7 @@ def main():
         f.write(tex)
 
     print(f"OK  INFORME.tex actualizado ({len(piezas)} piezas en los anexos)")
-    for b in ("factores", "correccion", "corregidos", "anexoC", "anexoB1", "anexoB2",
+    for b in ("factores", "correccion", "corregidos", "anexoB1", "anexoB2",
               "submuestras", "caracteristicos", "anexoC2",
               "clase", "resumen", "robustez", "conclusion", "anexoD"):
         print(f"    bloque {b}")

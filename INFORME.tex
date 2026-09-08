@@ -32,7 +32,11 @@
 \usepackage{graphicx}
 \usepackage{float}    % permite anclar tablas con [H], para que no floten fuera de su sección
 \usepackage{caption}
-\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}  % lista numerada [1]..[n] de la seccion de Referencias
+% hypertexnames=false: las ecuaciones llevan \tag{...} propio, asi que dos de ellas
+% caen en el mismo valor del contador y hyperref generaba dos destinos con el mismo
+% nombre (equation.5). Con nombres genericos cada \eqref apunta a donde debe.
+\usepackage[hidelinks,hypertexnames=false]{hyperref}
 
 % Las tablas largas de los anexos llevan titulos que no entran en las 4 pulgadas
 % que longtable reserva por defecto para el pie de la caption.
@@ -83,13 +87,22 @@ asigna la clase resistente correspondiente según UNE-EN 338:2010.
 
 \medskip
 % <<<AUTO:resumen>>>
-\noindent Se concluye que al lote le corresponde la clase resistente \textbf{C22} de UNE-EN 338:2010, gobernada por la resistencia característica a flexión $f_{m,k}$ y no por la rigidez.
+\noindent Los valores característicos del lote resultan $f_{m,k} = \SI{22,88}{\newton\per\square\milli\meter}$, $E_{0,mean} = \SI{13,49}{\kilo\newton\per\square\milli\meter}$ y $\rho_{k} = \SI{365,4}{\kilo\gram\per\cubic\meter}$. Con ellos le corresponde la clase resistente \textbf{C22} de UNE-EN 338:2010. La asignación la gobierna $f_{m,k}$: para alcanzar la clase inmediatamente superior, C24, faltan \SI{1,12}{\newton\per\square\milli\meter}, un \SI{4,9}{\percent}, mientras que los otros dos criterios se cumplen con márgenes del \SI{35}{\percent} y del \SI{7}{\percent} sobre lo exigido.
 % <<<END:resumen>>>
 
 \medskip
-\noindent\emph{Nota: el resumen se redacta al final, cuando los resultados estén cerrados.}
+\noindent El resultado se acompaña de un análisis de sensibilidad frente a las
+decisiones de cálculo adoptadas, del que se sigue que la única con capacidad para
+modificar la clase asignada es la distribución estadística ajustada a la resistencia,
+impuesta por la propia norma y respaldada por un contraste de bondad de ajuste.
 
+\vfill
+\noindent\textbf{Palabras clave:} madera aserrada, Picea, clasificación visual, clase
+resistente, valores característicos, UNE-EN 338, UNE-EN 384, UNE-EN 408, UNE-EN 14358.
+
+\newpage
 \tableofcontents
+\listoftables
 \newpage
 
 % =============================================================================
@@ -273,6 +286,31 @@ paramétrico actualizado.
         \si{\newton\per\milli\meter}, según se declara en el propio archivo de datos.
 \end{itemize}
 
+\subsection{Trazabilidad y verificación del cálculo}
+
+Las \num{258} probetas obligan a que toda la cadena de cálculo esté automatizada: cada
+corrección de criterio recalcula el conjunto completo. Se deja constancia del
+procedimiento seguido para que el resultado sea auditable:
+
+\begin{itemize}
+  \item El proceso se resuelve en cuatro etapas encadenadas, una por norma, y cada
+        etapa deja su salida completa en un archivo intermedio que constituye la
+        entrada de la siguiente. Los datos originales no se modifican en ningún punto.
+  \item \textbf{Las tablas de resultados y de anexos de este informe se generan a
+        partir de esas salidas}, no se transcriben. Un valor mal calculado se propaga
+        al documento sin que nadie lo teclee, de modo que la verificación se concentra
+        en el cálculo y no en la copia.
+  \item Los valores que sí figuran redactados en el texto ---rangos, medias, factores
+        citados en la discusión--- se cotejaron uno a uno contra los datos, comparando
+        el número con los mismos decimales con que está impreso. El contraste detectó
+        tres discrepancias en el último dígito, ya corregidas.
+  \item Cada expresión normativa aplicada lleva citado su apartado, y ninguna se
+        implementa dos veces: las etapas posteriores reutilizan la de la etapa que la
+        introdujo.
+  \item Antes de aplicar la tabla de clases resistentes se validó el procedimiento de
+        asignación contra un caso resuelto conocido (\S\ref{sec:asignacion}).
+\end{itemize}
+
 \subsection{Convención de numeración de las expresiones}
 
 Las expresiones que reproducen literalmente una fórmula normativa se numeran con el
@@ -336,9 +374,9 @@ contribución de la deformación por cortante:
 \end{equation}
 
 \noindent La equivalencia entre \eqref{eq:Eml} y \eqref{eq:Eml_cerrada} se comprobó
-numéricamente resolviendo la ecuación implícita por iteración sobre piezas de las tres
-muestras; la discrepancia resulta inferior a \num{e-5}\,\si{\percent}. El detalle se recoge en el
-Anexo~\ref{anx:geometria}.
+numéricamente resolviendo la ecuación implícita por iteración sobre la geometría
+representativa de cada una de las tres muestras; la discrepancia resulta inferior a
+\num{e-5}\,\si{\percent}. El detalle se recoge en el Anexo~\ref{anx:geometria}.
 
 \subsection{Corrección a las condiciones de referencia}
 \label{sec:correcciones}
@@ -436,7 +474,7 @@ pieza sobre las \num{258} probetas, los factores geométricos resultan:
 % <<<AUTO:factores>>>
 \begin{table}[H]
 \centering
-\caption{Factores de corrección geométrica por submuestra (UNE-EN 384:2016, \S5.4.3). Los rangos de $k_{h}$ y $k_{\ell}$ recogen la variación pieza a pieza dentro de cada submuestra}
+\caption[Factores de corrección geométrica por submuestra (UNE-EN 384:2016, \S5.4.3)]{Factores de corrección geométrica por submuestra (UNE-EN 384:2016, \S5.4.3). Los rangos de $k_{h}$ y $k_{\ell}$ recogen la variación pieza a pieza dentro de cada submuestra}
 \begin{tabular}{c c r r r r c c}
 \toprule
 \textbf{Muestra} & \textbf{$n$} & \textbf{$h$ medio} & \textbf{$a_{f}$} & \textbf{$48h$} & \textbf{$\lonet$} & \textbf{$k_{h}$} & \textbf{$k_{\ell}$} \\
@@ -457,7 +495,7 @@ correcciones sobre el valor medio de cada submuestra es el siguiente:
 % <<<AUTO:correccion>>>
 \begin{table}[H]
 \centering
-\caption{Variación del valor medio de cada submuestra por efecto de las correcciones}
+\caption[Variación del valor medio de cada submuestra por efecto de las correcciones]{Variación del valor medio de cada submuestra por efecto de las correcciones}
 \begin{tabular}{c r r r}
 \toprule
 \textbf{Muestra} & \textbf{$\fm$} & \textbf{$\Ecero$} & \textbf{$\rho$} \\
@@ -472,7 +510,7 @@ correcciones sobre el valor medio de cada submuestra es el siguiente:
 % <<<END:correccion>>>
 
 \noindent Gobierna $k_{h}$, y de forma apreciable únicamente en la muestra 1: con un
-canto en torno a \SI{94}{\milli\meter} el factor vale \num{1,099} y la resistencia
+canto en torno a \SI{94}{\milli\meter} el factor vale \num{1,098} en media y la resistencia
 media desciende un \SI{8,6}{\percent} al trasladarla al canto de referencia. En la
 muestra 2 el canto está próximo a los \SI{150}{\milli\meter} y el efecto neto queda en
 el \SI{-0,6}{\percent}, al compensarse parcialmente con $k_{\ell}$. En la muestra 3,
@@ -495,7 +533,7 @@ Anexo~\ref{anx:piezas}.
 % <<<AUTO:corregidos>>>
 \begin{table}[H]
 \centering
-\caption{Resistencia a flexión corregida $\fm$ tras la corrección a condiciones de referencia}
+\caption[Resistencia a flexión corregida $\fm$ tras la corrección a condiciones de referencia]{Resistencia a flexión corregida $\fm$ tras la corrección a condiciones de referencia}
 \begin{tabular}{c c r r r r r}
 \toprule
 \textbf{Muestra} & \textbf{$n$} & \textbf{media} & \textbf{$s$} & \textbf{CoV} & \textbf{mín.} & \textbf{máx.} \\
@@ -511,7 +549,7 @@ Anexo~\ref{anx:piezas}.
 
 \begin{table}[H]
 \centering
-\caption{Módulo de elasticidad $\Ecero$ tras la corrección a condiciones de referencia}
+\caption[Módulo de elasticidad $\Ecero$ tras la corrección a condiciones de referencia]{Módulo de elasticidad $\Ecero$ tras la corrección a condiciones de referencia}
 \begin{tabular}{c c r r r r r}
 \toprule
 \textbf{Muestra} & \textbf{$n$} & \textbf{media} & \textbf{$s$} & \textbf{CoV} & \textbf{mín.} & \textbf{máx.} \\
@@ -527,7 +565,7 @@ Anexo~\ref{anx:piezas}.
 
 \begin{table}[H]
 \centering
-\caption{Densidad corregida $\rho$ tras la corrección a condiciones de referencia}
+\caption[Densidad corregida $\rho$ tras la corrección a condiciones de referencia]{Densidad corregida $\rho$ tras la corrección a condiciones de referencia}
 \begin{tabular}{c c r r r r r}
 \toprule
 \textbf{Muestra} & \textbf{$n$} & \textbf{media} & \textbf{$s$} & \textbf{CoV} & \textbf{mín.} & \textbf{máx.} \\
@@ -590,8 +628,8 @@ k_{s}(n) = \frac{6{,}5n + 6}{3{,}7n - 3}
 \noindent Se adopta la expresión \eqref{eq:ks} por ser la propia de la norma para
 tamaños de muestra no tabulados. Conviene precisar que \textbf{no} resulta
 uniformemente conservadora frente a la Tabla 1: arroja valores algo inferiores a los
-tabulados para tamaños pequeños ($n = 20$: \num{1,916} frente a \num{1,93}) y algo
-superiores para tamaños grandes ($n = 100$: \num{1,788} frente a \num{1,76}). Para los
+tabulados para tamaños pequeños ($n = 20$: \num{1,915} frente a \num{1,93}) y algo
+superiores para tamaños grandes ($n = 100$: \num{1,787} frente a \num{1,76}). Para los
 tamaños del presente lote la Tabla 1 no tabula $n = 79$, $89$ ni $90$; su regla de
 tomar el valor de $k_{s}$ inmediatamente mayor conduce en los tres casos a la entrada
 $n = 50$, esto es $k_{s} = \num{1,81}$, frente al $\approx \num{1,79}$ de la expresión
@@ -642,7 +680,7 @@ los datos ya corregidos a las condiciones de referencia.
 % <<<AUTO:submuestras>>>
 \begin{table}[H]
 \centering
-\caption{Valores estadísticos por submuestra (UNE-EN 14358:2016). $f_{05}$ por ajuste log-normal, $\rho_{05}$ por ajuste normal y $\bar{E}$ como media aritmética (\S3.3 d)}
+\caption[Valores estadísticos por submuestra (UNE-EN 14358:2016)]{Valores estadísticos por submuestra (UNE-EN 14358:2016). $f_{05}$ por ajuste log-normal, $\rho_{05}$ por ajuste normal y $\bar{E}$ como media aritmética (\S3.3 d)}
 \begin{tabular}{c c r r r r}
 \toprule
 \textbf{Muestra} & \textbf{$n$} & \textbf{$f_{05,i}$} & \textbf{$\bar{E}_{i}$} & \textbf{$\rho_{05,i}$} & \textbf{$k_{s}(n)$} \\
@@ -679,7 +717,7 @@ UNE-EN 384:2016.
 % <<<AUTO:caracteristicos>>>
 \begin{table}[H]
 \centering
-\caption{Valores característicos del lote (UNE-EN 384:2016, expresiones (11), (12) y (13)). El término «tope» es $1{,}2\,f_{05,\min}$ para la resistencia y $1{,}1\,X_{\min}$ para módulo y densidad; el módulo lleva además el divisor $0{,}95$ de la expresión (12)}
+\caption[Valores característicos del lote (UNE-EN 384:2016, expresiones (11), (12) y (13))]{Valores característicos del lote (UNE-EN 384:2016, expresiones (11), (12) y (13)). El término «tope» es $1{,}2\,f_{05,\min}$ para la resistencia y $1{,}1\,X_{\min}$ para módulo y densidad; el módulo lleva además el divisor $0{,}95$ de la expresión (12)}
 \begin{tabular}{l c r r c r l}
 \toprule
 \textbf{Magnitud} & \textbf{Unidad} & \textbf{Media pond.} & \textbf{Tope} & \textbf{$k_{n}$} & \textbf{Valor} & \textbf{Gobierna} \\
@@ -693,13 +731,12 @@ $\rho_{k}$ & [\si{\kilo\gram\per\cubic\meter}] & 388,7 & 409,6 & 0,94 & \textbf{
 % <<<END:caracteristicos>>>
 
 \noindent En las tres expresiones gobierna la \textbf{media ponderada}, y no el término
-acotado por la submuestra más desfavorable. Ello indica que la dispersión entre las tres
-submuestras no es tal que ninguna de ellas arrastre al conjunto: la clasificación visual
-produjo un lote razonablemente homogéneo, pese a tratarse de tres escuadrías distintas.
-De haber gobernado el otro término, el lote habría quedado condicionado por su fracción
-más débil.
+acotado por la submuestra más desfavorable: en ningún caso resulta $1{,}2\,f_{05,\min}$
+ni $1{,}1\,X_{\min}$ inferior a la media del conjunto. La lectura de este resultado
+sobre la homogeneidad del lote se recoge en las conclusiones (\S\ref{sec:homogeneidad}).
 
 \subsection{Asignación de la clase resistente}
+\label{sec:asignacion}
 
 Tratándose de una conífera, la asignación se efectúa dentro de las clases C de
 UNE-EN 338:2010, cuya tabla 1 fija para cada clase un valor mínimo de resistencia
@@ -725,7 +762,7 @@ clase de la tabla resultase admisible por rigidez.
 % <<<AUTO:clase>>>
 \begin{table}[H]
 \centering
-\caption{Verificación de los criterios de asignación de UNE-EN 338:2010, tabla 1. La relación es el cociente entre el valor obtenido y el requerido: cumple si es mayor o igual que la unidad}
+\caption[Verificación de los criterios de asignación de UNE-EN 338:2010, tabla 1]{Verificación de los criterios de asignación de UNE-EN 338:2010, tabla 1. La relación es el cociente entre el valor obtenido y el requerido: cumple si es mayor o igual que la unidad}
 \begin{tabular}{l c r r r c}
 \toprule
 \textbf{Criterio} & \textbf{Unidad} & \textbf{Valor obtenido} & \textbf{Requisito de C22} & \textbf{Relación} & \textbf{Cumple} \\
@@ -761,7 +798,7 @@ rehaciendo la asignación completa con esa decisión cambiada y manteniendo las 
 % <<<AUTO:robustez>>>
 \begin{table}[H]
 \centering
-\caption{Sensibilidad de la clase asignada a las decisiones de criterio. Cada fila rehace la asignación completa cambiando una sola decisión y manteniendo las restantes}
+\caption[Sensibilidad de la clase asignada a las decisiones de criterio]{Sensibilidad de la clase asignada a las decisiones de criterio. Cada fila rehace la asignación completa cambiando una sola decisión y manteniendo las restantes}
 \begin{tabular}{p{7.2cm} r r c c}
 \toprule
 \textbf{Decisión alternativa} & \textbf{$f_{m,k}$} & \textbf{$\rho_{k}$} & \textbf{Clase} & \textbf{Efecto} \\
@@ -830,6 +867,7 @@ la cola inferior de la distribución de resistencia, tendría más efecto sobre 
 asignada que cualquier actuación sobre la rigidez.
 
 \subsection{Sobre la homogeneidad del lote}
+\label{sec:homogeneidad}
 
 En las tres expresiones \eqref{eq:fk}, \eqref{eq:E0} y \eqref{eq:rok} gobernó la media
 ponderada de las submuestras, y no el término acotado por la submuestra más
@@ -863,6 +901,57 @@ caracterizar las escuadrías por separado.
 \end{itemize}
 
 % =============================================================================
+\section*{Referencias}
+\addcontentsline{toc}{section}{Referencias}
+
+\begin{enumerate}[label={[\arabic*]}, leftmargin=2.2em, itemsep=0.35em]
+  \item UNE-EN 408:2010. \emph{Estructuras de madera. Madera aserrada y madera laminada
+        encolada para uso estructural. Determinación de algunas propiedades físicas y
+        mecánicas.} AENOR. \\
+        Aporta el método de ensayo a cuatro puntos y las expresiones de $\fm$ y $\Eml$.
+
+  \item UNE-EN 384:2016. \emph{Madera estructural. Determinación de los valores
+        característicos de las propiedades mecánicas y la densidad.} AENOR, noviembre
+        de 2016, 21 páginas. Versión oficial en español de la Norma Europea EN
+        384:2016; anula y sustituye a UNE-EN 384:2010 y a su Erratum:2011. \\
+        Apartados empleados: \S5.3.4 (densidad de probeta completa), \S5.4.2
+        (corrección de humedad), \S5.4.3 (factores $k_{h}$ y $k_{\ell}$, expresiones 4,
+        5 y 6), \S5.4.4 (expresión 8), \S5.5.1 (remisión a UNE-EN 14358), \S5.5.2.2 y
+        tabla 1 (expresiones 11, 12 y 13, y factor $k_{n}$) y anexo A, normativo
+        (modelos de tabla).
+
+  \item UNE-EN 14358:2016. \emph{Estructuras de madera. Determinación y verificación de
+        los valores característicos.} AENOR, 17 páginas. Versión oficial en español de
+        la Norma Europea EN 14358:2016; anula y sustituye a UNE-EN 14358:2007. \\
+        Apartados empleados: \S3.2.2 y expresiones (1) a (6) (método paramétrico),
+        \S3.2.2 f) y expresión (10) junto con su tabla 1 (factor $k_{s}(n)$), y \S3.3 d)
+        (valor característico de una propiedad de rigidez).
+
+  \item UNE-EN 338:2010. \emph{Madera estructural. Clases resistentes.} AENOR. \\
+        Tabla 1, clases C14 a C50 de coníferas, empleada para la asignación del
+        apartado~\ref{sec:asignacion} y el anexo~\ref{anx:clases}.
+
+  \item Curso de Estructuras de Madera, edición 2026. Unidad S03E02,
+        \emph{Madera aserrada 2}. Facultad de Ingeniería, UdelaR. \\
+        Fuente del esquema de ensayo, de las alternativas de módulo de cortadura, del
+        criterio de muestreo y del ejemplo resuelto de asignación empleado como
+        contraste del procedimiento.
+
+  \item Enunciado del trabajo: \emph{Caracterización de un lote de madera aserrada de
+        Picea}, curso de Estructuras de Madera 2026, y archivo de datos
+        \texttt{Datos\_Picea.txt} (258 registros).
+\end{enumerate}
+
+\noindent De las cuatro normas citadas, UNE-EN 384:2016 y UNE-EN 14358:2016 se han
+consultado en su texto íntegro, y de ellas proceden todas las expresiones transcritas en
+este informe con indicación de apartado. UNE-EN 408:2010 y UNE-EN 338:2010 no estaban
+disponibles en su edición completa: sus contenidos se han tomado de las diapositivas del
+curso, tal como el propio enunciado admite para la tabla de clases resistentes. En
+particular, \textbf{los valores de la tabla 1 de UNE-EN 338:2010 se transcribieron desde
+la reproducción de la diapositiva}, y conviene contrastarlos contra la norma antes de
+emplear este informe fuera del ámbito académico.
+
+% =============================================================================
 \appendix
 \section{Verificación geométrica del ensayo y de los datos}
 \label{anx:geometria}
@@ -891,7 +980,10 @@ $a = 6h \pm 1{,}5h$ (entre $4{,}5h$ y $7{,}5h$). Las \num{258} piezas cumplen.
 \subsection{Verificación de la forma cerrada del módulo local}
 
 Contraste entre la expresión \eqref{eq:Eml_cerrada} y la resolución iterativa de la
-ecuación implícita \eqref{eq:Eml} con $G = \Eml/16$:
+ecuación implícita \eqref{eq:Eml} con $G = \Eml/16$. Las tres filas no corresponden a
+probetas concretas: reproducen la geometría representativa de cada muestra con una
+pendiente $P/f$ redondeada, de modo que el contraste quede referido a la expresión y no
+a un dato particular.
 
 \begin{table}[htbp]
 \centering
@@ -947,7 +1039,7 @@ apartado~\ref{sec:correcciones}, por lo que no se repiten aquí.
 % <<<AUTO:anexoB1>>>
 {\footnotesize
 \begin{longtable}{r c r r r r r r r r}
-\caption{Datos de partida y propiedades sin corregir (UNE-EN 408:2010)}\label{tab:anexoB1}\\
+\caption[Datos de partida y propiedades sin corregir (UNE-EN 408:2010)]{Datos de partida y propiedades sin corregir (UNE-EN 408:2010)}\label{tab:anexoB1}\\
 \toprule
 \textbf{Viga} & \textbf{M} & \textbf{$b$} & \textbf{$h$} & \textbf{$CH$} & \textbf{$\rho$} & \textbf{$P_{max}$} & \textbf{$P/f$} & \textbf{$\fm$} & \textbf{$\Eml$} \\
  & & \multicolumn{2}{c}{[mm]} & [\%] & [kg/m$^{3}$] & [N] & [N/mm] & \multicolumn{2}{c}{[N/mm$^{2}$]} \\
@@ -1228,7 +1320,7 @@ apartado~\ref{sec:correcciones}, por lo que no se repiten aquí.
 % <<<AUTO:anexoB2>>>
 {\footnotesize
 \begin{longtable}{r c r r r r r r r}
-\caption{Factores de corrección y valores en condiciones de referencia (UNE-EN 384:2016, \S5.4)}\label{tab:anexoB2}\\
+\caption[Factores de corrección y valores en condiciones de referencia (UNE-EN 384:2016, \S5.4)]{Factores de corrección y valores en condiciones de referencia (UNE-EN 384:2016, \S5.4)}\label{tab:anexoB2}\\
 \toprule
 \textbf{Viga} & \textbf{M} & \textbf{$a_{f}$} & \textbf{$\lonet$} & \textbf{$k_{h}$} & \textbf{$k_{\ell}$} & \textbf{$\fm$} & \textbf{$\Ecero$} & \textbf{$\rho$} \\
  & & \multicolumn{2}{c}{[mm]} & \multicolumn{2}{c}{[--]} & \multicolumn{2}{c}{[N/mm$^{2}$]} & [kg/m$^{3}$] \\
@@ -1507,67 +1599,9 @@ apartado~\ref{sec:correcciones}, por lo que no se repiten aquí.
 % <<<END:anexoB2>>>
 
 % -----------------------------------------------------------------------------
-\section{Estadística por submuestra}
+\section{Parámetros del ajuste estadístico por submuestra}
 \label{anx:estadistica}
 % -----------------------------------------------------------------------------
-
-\subsection{Estadística descriptiva de los valores corregidos}
-
-Descriptiva de las tres variables una vez trasladadas a las condiciones de referencia.
-\textbf{No son valores característicos}: constituyen la entrada del procedimiento de
-UNE-EN 14358:2016, cuyo resultado se recoge en el apartado~\ref{sec:resultados_sub}.
-
-% <<<AUTO:anexoC>>>
-\begin{table}[H]
-\centering
-\caption{Resistencia a flexión corregida $\fm$ tras la corrección a condiciones de referencia}
-\begin{tabular}{c c r r r r r}
-\toprule
-\textbf{Muestra} & \textbf{$n$} & \textbf{media} & \textbf{$s$} & \textbf{CoV} & \textbf{mín.} & \textbf{máx.} \\
- & & \multicolumn{2}{c}{[\si{\newton\per\square\milli\meter}]} & [\si{\percent}] & \multicolumn{2}{c}{[\si{\newton\per\square\milli\meter}]} \\
-\midrule
-1 & 89 & 33,78 & 6,85 & 20,3 & 16,95 & 58,49 \\
-2 & 90 & 38,88 & 6,67 & 17,1 & 26,15 & 60,22 \\
-3 & 79 & 39,83 & 10,52 & 26,4 & 23,57 & 84,61 \\
-\textbf{Lote} & 258 & 37,41 & 8,50 & 22,7 & 16,95 & 84,61 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\caption{Módulo de elasticidad $\Ecero$ tras la corrección a condiciones de referencia}
-\begin{tabular}{c c r r r r r}
-\toprule
-\textbf{Muestra} & \textbf{$n$} & \textbf{media} & \textbf{$s$} & \textbf{CoV} & \textbf{mín.} & \textbf{máx.} \\
- & & \multicolumn{2}{c}{[\si{\newton\per\square\milli\meter}]} & [\si{\percent}] & \multicolumn{2}{c}{[\si{\newton\per\square\milli\meter}]} \\
-\midrule
-1 & 89 & 13706 & 1798 & 13,1 & 8514 & 19661 \\
-2 & 90 & 13388 & 1442 & 10,8 & 10314 & 17182 \\
-3 & 79 & 13839 & 1991 & 14,4 & 9782 & 19355 \\
-\textbf{Lote} & 258 & 13636 & 1751 & 12,8 & 8514 & 19661 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\caption{Densidad corregida $\rho$ tras la corrección a condiciones de referencia}
-\begin{tabular}{c c r r r r r}
-\toprule
-\textbf{Muestra} & \textbf{$n$} & \textbf{media} & \textbf{$s$} & \textbf{CoV} & \textbf{mín.} & \textbf{máx.} \\
- & & \multicolumn{2}{c}{[\si{\kilo\gram\per\cubic\meter}]} & [\si{\percent}] & \multicolumn{2}{c}{[\si{\kilo\gram\per\cubic\meter}]} \\
-\midrule
-1 & 89 & 450,0 & 27,0 & 6,0 & 389,7 & 519,5 \\
-2 & 90 & 417,3 & 25,1 & 6,0 & 367,8 & 490,7 \\
-3 & 79 & 447,3 & 30,4 & 6,8 & 379,8 & 522,4 \\
-\textbf{Lote} & 258 & 437,8 & 31,2 & 7,1 & 367,8 & 522,4 \\
-\bottomrule
-\end{tabular}
-\end{table}
-% <<<END:anexoC>>>
-
-\subsection{Parámetros del ajuste estadístico}
 
 Parámetros con los que se obtuvieron los valores del apartado~\ref{sec:resultados_sub}.
 Para la resistencia, $\bar{y}$ y $s_{y}$ están expresados en logaritmos naturales, por
@@ -1578,7 +1612,7 @@ adoptar un coeficiente de variación de la muestra inferior a \num{0,05}.
 % <<<AUTO:anexoC2>>>
 \begin{table}[H]
 \centering
-\caption{Resistencia a flexión: parámetros del ajuste log-normal. $\bar{y}$ y $s_{y}$ en logaritmos naturales; $m_{k} = f_{05}$ en \si{\newton\per\square\milli\meter}}
+\caption[Resistencia a flexión: parámetros del ajuste log-normal]{Resistencia a flexión: parámetros del ajuste log-normal. $\bar{y}$ y $s_{y}$ en logaritmos naturales; $m_{k} = f_{05}$ en \si{\newton\per\square\milli\meter}}
 \begin{tabular}{c c r r c r r r}
 \toprule
 \textbf{Muestra} & \textbf{$n$} & \textbf{$\bar{y}$} & \textbf{$s_{y}$} & \textbf{piso} & \textbf{$k_{s}$ (14358-10)} & \textbf{$k_{s}$ Tabla 1} & \textbf{$m_{k}$} \\
@@ -1592,7 +1626,7 @@ adoptar un coeficiente de variación de la muestra inferior a \num{0,05}.
 
 \begin{table}[H]
 \centering
-\caption{Densidad: parámetros del ajuste normal. $\bar{y}$, $s_{y}$ y $m_{k} = \rho_{05}$ en \si{\kilo\gram\per\cubic\meter}}
+\caption[Densidad: parámetros del ajuste normal]{Densidad: parámetros del ajuste normal. $\bar{y}$, $s_{y}$ y $m_{k} = \rho_{05}$ en \si{\kilo\gram\per\cubic\meter}}
 \begin{tabular}{c c r r c r r r}
 \toprule
 \textbf{Muestra} & \textbf{$n$} & \textbf{$\bar{y}$} & \textbf{$s_{y}$} & \textbf{piso} & \textbf{$k_{s}$ (14358-10)} & \textbf{$k_{s}$ Tabla 1} & \textbf{$m_{k}$} \\
@@ -1606,7 +1640,7 @@ adoptar un coeficiente de variación de la muestra inferior a \num{0,05}.
 
 \begin{table}[H]
 \centering
-\caption{Contraste de la distribución adoptada para la resistencia. Estadístico $D$ de Kolmogorov-Smirnov frente a la distribución ajustada; un valor menor indica mejor ajuste}
+\caption[Contraste de la distribución adoptada para la resistencia]{Contraste de la distribución adoptada para la resistencia. Estadístico $D$ de Kolmogorov-Smirnov frente a la distribución ajustada; un valor menor indica mejor ajuste}
 \begin{tabular}{c r r c r r}
 \toprule
 \textbf{Muestra} & \textbf{$D$ log-normal} & \textbf{$D$ normal} & \textbf{Mejor ajuste} & \textbf{$f_{05}$ log-normal} & \textbf{$f_{05}$ normal} \\
@@ -1621,7 +1655,7 @@ adoptar un coeficiente de variación de la muestra inferior a \num{0,05}.
 
 \begin{table}[H]
 \centering
-\caption{Sensibilidad de los valores característicos al $k_{s}(n)$ adoptado. El módulo no figura por caracterizarse mediante la media de submuestra, que no depende de $k_{s}$}
+\caption[Sensibilidad de los valores característicos al $k_{s}(n)$ adoptado]{Sensibilidad de los valores característicos al $k_{s}(n)$ adoptado. El módulo no figura por caracterizarse mediante la media de submuestra, que no depende de $k_{s}$}
 \begin{tabular}{l r r r}
 \toprule
 \textbf{Magnitud} & \textbf{Con (14358-10)} & \textbf{Con Tabla 1 ($k_{s} = 1{,}81$)} & \textbf{Diferencia} \\
@@ -1653,7 +1687,7 @@ proporcional entre las tres magnitudes.
 % <<<AUTO:anexoD>>>
 \begin{table}[H]
 \centering
-\caption{Verificación de los valores característicos del lote frente a todas las clases C de UNE-EN 338:2010, tabla 1. En negrita, la clase asignada}
+\caption[Verificación de los valores característicos del lote frente a todas las clases C de UNE-EN 338:2010, tabla 1]{Verificación de los valores característicos del lote frente a todas las clases C de UNE-EN 338:2010, tabla 1. En negrita, la clase asignada}
 \begin{tabular}{c r r r r r r c}
 \toprule
 \textbf{Clase} & \textbf{$f_{m,k}$ mín.} & \textbf{rel.} & \textbf{$E_{0,mean}$ mín.} & \textbf{rel.} & \textbf{$\rho_{k}$ mín.} & \textbf{rel.} & \textbf{Cumple} \\

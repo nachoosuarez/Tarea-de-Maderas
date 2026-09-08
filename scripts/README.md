@@ -16,6 +16,7 @@ hace falta exportar a Excel, se agrega `openpyxl`.
 | `04_valores_caracteristicos.py` | Etapa 3: EN 14358 por submuestra (log-normal / normal, `k_s(n)`) y combinación EN 384 §5.5.2.2 | hecho |
 | `05_clase_resistente.py` | Etapa 4: verificación de los tres criterios contra las clases C de EN 338:2010, asignación, escenario del divisor 1,05 y análisis de robustez | hecho |
 | `90_tablas_informe.py` | Vuelca los resultados a los bloques `% <<<AUTO:...>>>` del `INFORME.tex` | hecho |
+| `91_revision_cruzada.py` | Audita el `INFORME.tex`: recalcula desde los datos los números que están **redactados a mano** fuera de los bloques `AUTO`, y controla la estructura del archivo | hecho |
 
 ## Cómo correrlos
 
@@ -28,12 +29,40 @@ python scripts/00_auditoria_datos.py
 El orden importa: cada script lee el CSV que dejó el anterior. Cadena completa hasta hoy:
 
 ```bash
-python scripts/02_propiedades_por_pieza.py && python scripts/03_correcciones_en384.py && python scripts/04_valores_caracteristicos.py && python scripts/05_clase_resistente.py && python scripts/90_tablas_informe.py
+python scripts/02_propiedades_por_pieza.py && python scripts/03_correcciones_en384.py && python scripts/04_valores_caracteristicos.py && python scripts/05_clase_resistente.py && python scripts/90_tablas_informe.py && python scripts/91_revision_cruzada.py
 ```
 
-`90_tablas_informe.py` va **siempre al final**: es el que sincroniza el archivo madre con lo
-que acaba de calcularse. Si no se corre, el `INFORME.tex` queda mostrando números viejos sin
-avisar.
+`90_tablas_informe.py` va **siempre al final del cálculo**: es el que sincroniza el archivo
+madre con lo que acaba de calcularse. Si no se corre, el `INFORME.tex` queda mostrando números
+viejos sin avisar.
+
+`91_revision_cruzada.py` va **después del 90** y es el único que no produce nada: audita. Sale
+con código 1 si algo no cuadra, así que sirve tal cual de puerta antes de compilar o de hacer
+commit.
+
+## El 90 y el 91 se reparten el informe
+
+El `.tex` tiene dos clases de números y cada script cubre una:
+
+| | Quién lo escribe | Quién lo controla |
+|---|---|---|
+| Tablas dentro de `% <<<AUTO:...>>>` | `90_tablas_informe.py`, desde los CSV | Nadie tiene que revisarlas: si el CSV está bien, la tabla está bien |
+| Números redactados en el texto corrido | Una persona, a mano | `91_revision_cruzada.py` |
+
+El 91 guarda para cada comprobación **la cadena LaTeX literal tal como aparece en el `.tex`**
+(`\num{1,098}`, `\SI{9,8}{\percent}`, `6{,}00`) y exige dos cosas: que esa cadena siga estando
+en el archivo y que el valor recalculado desde los datos, formateado **con los mismos decimales
+con que está impreso**, coincida. Si alguien reescribe la frase, la comprobación falla en vez
+de quedarse callada. Hoy son **117 comprobaciones**, más los controles de estructura (que no
+queden `\ref` huérfanos, ni marcas `\verificar`, ni bloques `AUTO` sin su `END`).
+
+Encontró cuatro errores reales en la primera corrida: tres redondeos de más en el último
+dígito (`k_h` 1,099 → 1,098, `k_s(20)` 1,916 → 1,915, `k_s(100)` 1,788 → 1,787) y una frase
+que describía mal cómo se había hecho la verificación iterativa del anexo A.
+
+Lo que **no** puede comprobar —la transcripción de la tabla de EN 338, los coeficientes
+normativos y la redacción— queda listado explícito al final de
+`resultados/91_revision_cruzada.md`.
 
 ## Convenciones
 

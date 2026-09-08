@@ -93,7 +93,13 @@ figuran. Las tres muestras son tres secciones transversales distintas:
       resultó **no determinante**; la única decisión capaz de mover la clase es la
       distribución estadística. Ver
       [`04-semana-05_clase-resistente/`](04-semana-05_clase-resistente/).
-- [ ] **Semanas 6-8** — Redacción, anexos y revisión cruzada.
+- [x] **Semanas 6-8** — Redacción, anexos y revisión cruzada. El informe está cerrado:
+      **27 páginas**, con las seis secciones que pide la letra más una de trazabilidad del
+      cálculo, una de referencias y cuatro anexos. Los números redactados a mano se auditan
+      solos con `91_revision_cruzada.py`: **117 comprobaciones, 0 diferencias**, después de
+      corregir los tres redondeos y la frase inexacta que encontró. Ver
+      [`05-semanas-06-08_informe/`](05-semanas-06-08_informe/).
+      **Falta únicamente poner los nombres del grupo** en `\author{}`.
 
 ## Cómo moverse por el repo
 
@@ -105,7 +111,7 @@ PLANIFICACION.md   El plan completo con la justificación normativa de cada paso
 02-semanas-02-03_  Etapas 1 y 2: propiedades por pieza y correcciones.
 03-semana-04_...   Etapa 3: valores característicos.
 04-semana-05_...   Etapa 4: asignación de clase.
-05-semanas-06-08_  El informe y sus anexos.
+05-semanas-06-08_  Etapa 5: el informe, sus anexos y la revisión cruzada. Hecha.
 06-referencias/    De dónde salió cada fórmula, con apartado y página.
 scripts/           El procesamiento en Python.
 resultados/        Salidas generadas. Se regeneran corriendo los scripts.
@@ -121,15 +127,15 @@ En la raíz, fuera de las carpetas por semana, está [`INFORME.tex`](INFORME.tex
 completo en LaTeX**, en un único archivo autocontenido. Se sube tal cual a Overleaf (New
 Project → Upload Project, o pegarlo en un proyecto en blanco) y compila con **pdfLaTeX** sin
 tocar nada. Compilado localmente con MiKTeX (tres pasadas, por las referencias cruzadas y los
-anchos de `longtable`): **26 páginas, sin errores**.
+anchos de `longtable`): **27 páginas, 0 errores y 0 avisos `LaTeX Warning`**.
 
-> Sí tira 9 avisos `Infinite glue shrinkage found in box being split`, en las páginas de los
+> Sí tira 8 avisos `Infinite glue shrinkage found in box being split`, en las páginas de los
 > anexos. Los produce `longtable` al partir una tabla larga entre páginas y son
 > **preexistentes** — ya estaban antes de la semana 4 —; la salida sale bien igual. Lo aclaro
 > porque este README afirmaba «sin errores ni warnings», que era falso.
 
 Sigue la estructura que pide la letra: Resumen · Objetivos · Datos de partida · Análisis de
-datos · Resultados · Conclusiones, más los Anexos A, B y C.
+datos · Resultados · Conclusiones, más Referencias y los Anexos A, B, C y D.
 
 **Cómo se lee el archivo:**
 
@@ -165,8 +171,16 @@ reescribe `scripts/90_tablas_informe.py` a partir de los CSV de `resultados/`. L
 mano vive fuera de esos bloques y nunca se pisa. Secuencia después de tocar un cálculo:
 
 ```bash
-python scripts/03_correcciones_en384.py && python scripts/04_valores_caracteristicos.py && python scripts/05_clase_resistente.py && python scripts/90_tablas_informe.py
+python scripts/03_correcciones_en384.py && python scripts/04_valores_caracteristicos.py && python scripts/05_clase_resistente.py && python scripts/90_tablas_informe.py && python scripts/91_revision_cruzada.py
 ```
+
+El último de la cadena no produce nada: **audita**. Los números que sí están redactados a mano
+en el texto corrido —rangos, medias, factores citados en la discusión— los recalcula
+`scripts/91_revision_cruzada.py` desde los datos y los compara con los mismos decimales con que
+están impresos, exigiendo además que la cadena LaTeX exacta siga en el archivo. Hoy son
+**117 comprobaciones con 0 diferencias**; sale con código 1 si algo no cuadra, así que sirve de
+puerta antes de compilar. Encontró cuatro errores reales que la vista no vio: tres redondeos de
+más en el último dígito y una frase que describía mal cómo se hizo una verificación.
 
 ## Convenciones
 
